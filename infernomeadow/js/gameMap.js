@@ -17,6 +17,11 @@ mapObject.prototype.init = function(size){
 };
 	
 mapObject.prototype.move = function (oldTile, newTile){
+	
+	var veh = oldTile.unitType;
+	
+	if (!this.validMove(newTile, (veh == 53 || veh == 54 || veh == 55 || veh == 61 || veh == 62 || veh == 63)))
+		return;
 
 	var tileMap = me.game.currentLevel;
 	
@@ -30,7 +35,21 @@ mapObject.prototype.move = function (oldTile, newTile){
 	oldTile.unitType = null;
 	
 	layer.clearTile(oldTile.x, oldTile.y);
-}
+};
+
+mapObject.prototype.validMove = function(tile, vehicle){
+	if (tile.terrainType == 20)
+		return false;
+	else if (vehicle == true)
+		return this.validMoveVehicle(tile);
+	else 
+		return true;
+};
+
+mapObject.prototype.validMoveVehicle = function(tile){
+	return !(tile.terrainType == 5 || tile.terrainType == 4 || tile.terrainType == 3);
+};
+
 	
 //holds relevant data. 
 function container() {
