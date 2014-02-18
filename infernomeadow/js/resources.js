@@ -5,10 +5,10 @@ game.resources = [
 	 * {name: "example", type:"image", src: "data/img/example.png"},
 	 */
 	 
-    // Needs to be base64 uncompressed files!!!!!!
-	{name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-	{name: "TerrainSheet",  type:"image", src: "data/img/map/TerrainSheet.png"},
-	{name: "UnitSheet",  type:"image", src: "data/img/map/UnitSheet.png"},
+	// Needs to be base64 uncompressed files!!!!!!
+	{name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
+	{name: "TerrainSheet", type:"image", src: "data/img/map/TerrainSheet.png"},
+	{name: "UnitSheet", type:"image", src: "data/img/map/UnitSheet.png"},
 	
     {name: "spinning_coin_gold", type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
 	
