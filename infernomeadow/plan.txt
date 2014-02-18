@@ -1,0 +1,29 @@
+
+
+
+Entities: buildings and units
+Player shit: money, things they control
+
+
+
+Game: 	Whose turn is it?
+		Give monies
+		What do they own
+		Allow player to move shit
+			also fight things
+		end turn
+		
+player move state:
+	select a unit
+		can move that unit to places/attack
+	select a building
+		data is given
+		can build things
+	menu selection
+		sound toggle and quit game options and new game
+		
+unit move/attack state
+	shift positions
+		animations and things
+	attack things
+		damage is dealt things get hurt. 
