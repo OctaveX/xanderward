@@ -14,7 +14,8 @@ game.PlayScreen = me.ScreenObject.extend({
 	
         // load a level
         me.levelDirector.loadLevel("map1");
-		
+        
+		me.game.add(new game.HUD.Container());
 		//binds 'enter' as the action key
 		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
 	   
@@ -23,10 +24,13 @@ game.PlayScreen = me.ScreenObject.extend({
     
 		// load up the map into the engine
 		//set up the map.
-		var size = 16;
+		var sizex = 20;
+		var sizey = 15;
 		game.data.map = new mapObject();
-		game.data.map.init(size);
+		game.data.map.init(sizex, sizey);
 		game.data.lastTile = new container();
+		
+		
 	},
 	
 	/**
@@ -41,11 +45,10 @@ game.PlayScreen = me.ScreenObject.extend({
 			var y = Math.floor(me.input.mouse.pos.y / 32);
 			
 			try{
-				//temporarily subtract two from x, as map center issue is unresolved.
-				var tile = game.data.map.tile[x-2][y];
+				var tile = game.data.map.tile[x][y];
 			}
 			catch(e){
-				return false
+				return false;
 			}
 			
 			console.log(x+ ", " + y);
@@ -54,47 +57,101 @@ game.PlayScreen = me.ScreenObject.extend({
 			console.log("Unit Type: " + tile.unitType);
 			console.log("Structure Type: " + tile.structureType);
 			
-			try{
-				//moving
-				console.log("Last Tile Unit Type: " + game.data.lastTile.unitType);
-				
-				if (game.data.lastTile.unitType != null && tile.unitType == null){
-					//move unit from last tile to new tile. 
-					console.log("it's happening!");
-					game.data.map.move(game.data.lastTile, tile);
-					game.data.lastTile = null;
-					this.invalidate = true;
-				}
-				// attacking
-				else {
-				//	CHECK IF ATTACKING WITH UNIT AKA HAVE A 'LASTCLICKED' VAR
-				// 	DO ATTACK/MOVE BASED ON SECOND CLICK AND IF POSSIBLE TO DO. 
+			// check for oldTile existing.
+			try {
+				if (game.data.lastTile.unit.state == 0){
 					
+					if (this.moveUnit(tile)){
+						this.invalidate = true;
+						return;
+					}						
+				}
+				else if (game.data.lastTile.unit.state == 1){
+				
+					if (this.attackUnit(tile)){
+						this.invalidate = true;
+						return;
+					}						
 				}
 			}
-			catch(e){
-				// lastTile is null.
+			catch (e){
+				// last tile has no unit.
+				console.log(e);
 			}
 			
-			game.data.lastTile = tile;
+			// check for current tile to have a unit
+			try {
+				if (tile.unit.state == 0) {
+					game.data.map.previewMove(tile);
+					game.data.lastTile = tile;
+					return;
+				}
+				else if (tile.unit.state == 1) {
+					game.data.map.previewAttack(tile);
+					game.data.lastTile = tile;
+					return;
+				}
+			
+			}
+			catch(e) {
+				// didn't click on a unit. 
+				console.log(e)
+			}
+			
+			//STRUCTURES!
+			try {
+				if(game.data.lastTile.structure.type != null)
+					//do something
+					return;		
+			
+			}
+			catch(e) {
+				//not a structure.
+				console.log(e);
+			}	
+			
+			
 		}
 		else 
 		{
 			return false;
 		}
 		
-		
-		// CHECK FOR GUI BUTTON PRESSES!??!
-		
-		//	UPDATE GUI
-		
-		
-		
-		//	check end conditions
-		//	return
-		
 		//redraw.
 		return true;
+	},
+	
+	moveUnit : function(tile) {
+		if (game.data.turn == game.data.lastTile.unit.player && tile.unitType == null){
+			
+			game.data.map.move(game.data.lastTile, tile);
+			
+			tile.unit.moved();
+			
+			game.data.moved.push(tile);
+			
+			game.data.lastTile = null;
+			
+			return true;
+		}
+		else 
+			return false;
+	},
+	
+	attackUnit : function(tile) {
+		if(game.data.turn == game.data.lastTile.unit.player 
+			&& tile.unit != null
+			&& (tile.x != game.data.lastTile.x
+			|| tile.y != game.data.lastTile.y)) {
+			          
+			game.data.map.unitAttack(game.data.lastTile, tile);
+		
+			game.data.lastTile = null;
+			
+			return true;
+		}
+		
+		return false;
 	},
 	
 	//drawing on update
@@ -112,5 +169,6 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	onDestroyEvent: function() {
 		// remove the HUD from the game world
+		me.game.world.removeChild(me.game.world.getEntityByProp("name", "HUD")[0]);
 	}
 });

@@ -7,14 +7,28 @@ var game = {
 		turn : "red",
 		score : 0,
 		map : null,
-		lastTile : null
+		lastTile : null,
+		switchTurn : function(){
+			if (this.turn == 'red')
+				this.turn = 'green';
+			else
+				this.turn = 'red';
+				
+			while(this.moved.length > 0){
+				var tile = this.moved.pop();
+				tile.unit.reset();
+				this.map.ungrey(tile);
+			}
+							
+		},
+		moved : new Array()
 	},
 	
 	
 	// Run on page load.
 	"onload" : function () {
 		// Initialize the video.
-		if (!me.video.init("screen", 640, 480, true, 'auto')) {
+		if (!me.video.init("screen", 853, 480, true, 'auto')) {
 			alert("Your browser does not support HTML5 canvas.");
 			return;
 		}
@@ -79,4 +93,28 @@ var game = {
 	
 	}
 };
+
+var MapAnchor = me.plugin.Base.extend({
+	version: "0.9.5",
+	init: function () {
+		me.plugin.patch(me.game, "loadTMXLevel", function (level) {
+			// Anchor map to the bottom of the viewport
+			//if (me.game.viewport.height > level.height) {
+				//level.pos.set(
+				//	0,
+				//	me.game.viewport.height - level.height
+				//);
+			//}
+
+			level.pos.set(0, 0);
+
+			this.parent(level);
+
+			//LOC used by someone else that I don't think we need
+			//me.game.viewport.setBounds(me.game.currentLevel.width, me.game.currentLevel.height + 100);
+		});
+	}
+});
+
+me.plugin.register(MapAnchor, "MapAnchor");
 

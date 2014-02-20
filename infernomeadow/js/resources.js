@@ -16,6 +16,10 @@ game.resources = [
 	
     {name: "title_screen", type:"image", src: "data/img/gui/shell_corp_ inc_ltd_&_co.png"},
     
+    /* Buttons */
+    {name: "button", type:"image", src: "data/img/gui/button.png"},
+    {name: "endturn", type:"image", src: "data/img/gui/endturn.png"},
+
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},
