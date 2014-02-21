@@ -4,28 +4,51 @@ var game = {
 
 	// an object where to store game information
 	data : {
+		isMuted : false,
 		turn : "red",
-		score : 0,
 		map : null,
 		lastTile : null,
 		switchTurn : function(){
-			if (this.turn == 'red')
+			if (this.turn == 'red') {
 				this.turn = 'green';
-			else
+				this.green.money += this.green.income;
+			}
+			else {
 				this.turn = 'red';
+				this.red.money += this.red.income;
+			}
 				
 			while(this.moved.length > 0){
 				var tile = this.moved.pop();
 				tile.unit.reset();
 				this.map.ungrey(tile);
-				
-				//Build FACTORY SHIT
-				
-				//GIVE INCOME
-			}
-							
+			}							
 		},
-		moved : new Array()
+		moved : new Array(),
+		GAMEOVER : {
+			winner : null,
+			end : false
+		},
+		red : {
+			income : 0,
+			money : 0
+		},
+		green : {
+			income : 0,
+			money : 0
+		},
+		reset : function(){
+			this.turn = "red";
+			this.map = null;
+			this.lastTile = null;
+			this.moved = new Array();
+			this.GAMEOVER.winner = null;
+			this.GAMEOVER.end = false;
+			this.red.income = 0;
+			this.green.income = 0;
+			this.red.money = 0;
+			this.green.money = 0;		
+		}
 	},
 	
 	
@@ -66,6 +89,7 @@ var game = {
 		//set different game states (different files)
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 		me.state.set(me.state.MENU, new game.TitleScreen());
+		me.state.set(me.state.CREDITS, new game.CreditsScreen());
 		
 		// Preload entities here into the entity pool
 		//me.entityPool.add("mainPlayer", game.PlayerRed);

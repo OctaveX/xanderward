@@ -3,7 +3,7 @@ var button = me.GUI_Object.extend(
 { 
    init:function(x, y, imageName, width, height, onClickFunction)
    {
-      settings = {}
+      var settings = {}
       settings.image = imageName;
       //If sprite width or height is greater than the actual size of the the image it will crash
       settings.spritewidth = width;
@@ -50,5 +50,4 @@ var textBox = me.Renderable.extend({
       // draw it baby !
       this.font.draw (context, this.textData, this.pos.x, this.pos.y);
    }
-
 });

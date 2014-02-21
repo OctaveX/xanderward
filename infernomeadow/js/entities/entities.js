@@ -88,6 +88,7 @@ Unit.prototype.initInfantry = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
+	this.cost = 1;
 };
 Unit.prototype.initRocket = function(){
 	this.typeName = "Rocket";
@@ -98,6 +99,7 @@ Unit.prototype.initRocket = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
+	this.cost = 1;
 };
 Unit.prototype.initSniper = function(){
 	this.typeName = "Sniper";
@@ -108,6 +110,7 @@ Unit.prototype.initSniper = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 3;
+	this.cost = 1;
 };
 Unit.prototype.initTank = function(){
 	this.typeName = "Tank";
@@ -118,6 +121,7 @@ Unit.prototype.initTank = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
+	this.cost = 1;
 };
 Unit.prototype.initLav = function(){
 	this.typeName = "IFV";
@@ -128,6 +132,7 @@ Unit.prototype.initLav = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
+	this.cost = 1;
 };
 Unit.prototype.initArtillery = function(){
 	this.typeName = "Artillery";
@@ -138,6 +143,7 @@ Unit.prototype.initArtillery = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 3;
+	this.cost = 1;
 };
 Unit.prototype.initCleric = function(){
 	this.typeName = "Cleric";
@@ -148,6 +154,7 @@ Unit.prototype.initCleric = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
+	this.cost = 1;
 };
 
 Unit.prototype.attack = function(enemy){
@@ -174,8 +181,14 @@ Unit.prototype.capture = function(structure, multiplier){
 	return false;
 };
 
-Unit.prototype.moved = function(){
+Unit.prototype.moved = function(tile){
+	//can't do wait on not your unit.
+	if (tile.unit.player != game.data.turn)
+		return false;
+		
 	this.state = 1;
+	game.data.moved.push(tile);
+	game.data.map.unlightTiles();
 };
 
 Unit.prototype.reset = function(){
@@ -209,6 +222,7 @@ Structure.prototype.init = function(type){
 			break;
 		case 39:
 			this.player = "red";
+			game.data.red.income++;
 			this.initThemePark();
 			break;
 		case 40:
@@ -221,6 +235,7 @@ Structure.prototype.init = function(type){
 			break;
 		case 45:
 			this.player = "green";
+			game.data.green.income++;
 			this.initThemePark();
 			break;
 		case 46:

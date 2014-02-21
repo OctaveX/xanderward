@@ -1,60 +1,62 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
-    <head>
-        <link rel="shortcut icon" href="https://dl.dropboxusercontent.com/u/51498033/information.ico">
-        <title> Xander Ward</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding: 1em;
-            }
-            @media (min-width: 768px) {
-                .btn{
-                    margin-top: 1em;
-                }
-            }
-            @media (max-width: 767px) {
-                .btn{
-                    margin-top: 0.5em;
-                }
-            }
-            #job_description {
-                display:inline-block
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="jumbotron">
-                <div class="row">
-                    <h1 class="text-center">Xander Ward <small id="job_description">Software Developer</small></h1>
-                </div>
-                <div class="row">
-                    <div class="col-md-offset-3 col-md-3">
-                        <img src="https://en.gravatar.com/userimage/61390195/3dbc22c54faac9285f32f7b359948833.jpg?size=200" class="img-circle img-responsive center-block">
-                    </div>
-                    <div class="col-md-3 btn-vert-block">
-                        <div class="row">
-                            <a class="btn btn-primary btn-block btn-lg" href="http://www.linkedin.com/in/xanderward" target="_blank"><i class="fa fa-linkedin-square"> LinkedIn</i></a>
-                        </div>
-                        <div class="row">
-                            <a class="btn btn-default btn-block btn-lg" href="https://github.com/browserscratch" target="_blank"><i class="fa fa-github"> GitHub</i></a>
-                        </div>
-                        <div class="row">
-                            <a class="btn btn-danger btn-block btn-lg" href="http://google.com/+XanderWard" target="_blank"><i class="fa fa-google-plus-square"> Google+</i></a>
-                        </div>
-                        <div class="row">
-                            <a class="btn btn-success btn-block btn-lg" href="./rollaballx.html" target="_blank"><i class="fa fa-gamepad"> Roll A Ball X</i></a>
-                        </div>
-                        <div class="row">
-                            <a class="btn btn-warning btn-block btn-lg disabled" href="#"><i class="fa fa-html5"> Inferno Meadow</i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
+	<head>
+		<title>Inferno Meadow</title>
+		<link rel="stylesheet" type="text/css" media="screen" href="index.css">
+		<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	</head>
+	<body>
+		<!-- Canvas placeholder -->
+		<div id="screen"></div>
+
+		<!-- melonJS Library -->
+		<script type="text/javascript" src="lib/melonJS-0.9.11.js"></script>
+
+		<!-- Plugin(s) -->
+		<script type="text/javascript" src="lib/plugins/debugPanel.js"></script>
+		
+		<!-- Game Scripts -->
+		<script type="text/javascript" src="js/game.js"></script>
+		<script type="text/javascript" src="js/resources.js"></script>
+
+		<script type="text/javascript" src="js/entities/entities.js"></script>
+		<script type="text/javascript" src="js/entities/HUD.js"></script>
+		<script type="text/javascript" src="js/entities/GUIEntities.js"></script>
+		<script type="text/javascript" src="js/entities/GUIObjects.js"></script>
+
+		<script type="text/javascript" src="js/screens/title.js"></script>
+		<script type="text/javascript" src="js/screens/play.js"></script>
+		<script type="text/javascript" src="js/screens/credits.js"></script>
+		
+		<script type="text/javascript" src="js/gameMap.js"></script>
+		
+		<!-- Bootstrap & Mobile optimization tricks -->
+		<script type="text/javascript">
+			window.onReady(function onReady() {
+				game.onload();
+
+				// Mobile browser hacks
+				if (me.device.isMobile && !navigator.isCocoonJS) {
+					// Prevent the webview from moving on a swipe
+					window.document.addEventListener("touchmove", function (e) {
+						e.preventDefault();
+						window.scroll(0, 0);
+						return false;
+					}, false);
+
+					// Scroll away mobile GUI
+					(function () {
+						window.scrollTo(0, 1);
+						me.video.onresize(null);
+					}).defer();
+
+					me.event.subscribe(me.event.WINDOW_ONRESIZE, function (e) {
+						window.scrollTo(0, 1);
+					});
+				}
+			});
+		</script>
+	</body>
 </html>

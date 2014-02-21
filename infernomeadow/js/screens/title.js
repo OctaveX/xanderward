@@ -14,9 +14,15 @@ game.TitleScreen = me.ScreenObject.extend({
 		//binds 'enter' as the action key
 		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
 	   
+		me.input.bindKey(me.input.KEY.X, "thex", true);
 		//binds left click to enter
 		me.input.bindMouse(me.input.mouse.LEFT, me.input.KEY.ENTER);
 	   
+	   
+		//TUNESKYS
+		if (me.audio.getCurrentTrack() == null)
+			me.audio.playTrack("Take_A_Chance");
+		
 		//binds an event listener to mouse move
 		//me.input.registerPointerEvent("mousemove", /*target*/, this.mouseMove.bind(this));
 	},
@@ -29,6 +35,10 @@ game.TitleScreen = me.ScreenObject.extend({
 		//CHECK FOR MOUSE INPUT IN CERTAIN AREAS
 		if (me.input.isKeyPressed('enter')){
 			me.state.change(me.state.PLAY);
+			return true;
+		}
+		else if (me.input.isKeyPressed("thex")){
+			me.state.change(me.state.CREDITS);
 			return true;
 		}
 		
@@ -49,6 +59,7 @@ game.TitleScreen = me.ScreenObject.extend({
 	onDestroyEvent: function() {
 		//clear the screen
 		// ???
+		
 		
 		// unbind the inputs. 
 		me.input.unbindMouse(me.input.mouse.LEFT);

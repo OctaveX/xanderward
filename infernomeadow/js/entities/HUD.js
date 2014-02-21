@@ -27,94 +27,71 @@ game.HUD.Container = me.ObjectContainer.extend({
 		this.name = "HUD";
 		
 		// add our child score object at the top left corner
-		this.addChild(new textBox(645, 0, new me.Font("Arial", 20, "white"), "", 
+		//0
+		
+      	this.addChild(turnText);
+      	this.addChild(unitInfo);
+      	this.addChild(sturctureInfo);
+		// // add the object at pos (10,10), z index 4
+		muteButton = new button(825, 0, "mute", 25, 25,
 			function(){
-				if (this.turn !== game.data.turn) { 
-			        if(game.data.turn == "red"){
-			           this.font.set("Arial", 20, "red");
-			           this.textData = "Red's Turn";
-			        }
-			        else{
-			           this.font.set("Arial", 20, "green");
-			           this.textData = "Greengo's Turn";
-			        }
-
-			        this.turn = game.data.turn;
-			        return true;
-      			}
-      			return false;
-      		}
-      	));
-
-		this.addChild(new textBox(645, 25, new me.Font("Arial", 18, "white"), "", 
-			function(){
-				try{
-				if(game.data.lastTile.unit != null)
-				{
-					this.font.set("Arial", 18, game.data.lastTile.unit.player);
-					this.textData = ""+ 
-						game.data.lastTile.unit.typeName + "\n" +
-						"HP\u2665 " + game.data.lastTile.unit.health.toString() + "/10\n" +
-						"Movement " +game.data.lastTile.unit.moveMax.toString() + "\n" +
-						"Attack Range\u2316 " +game.data.lastTile.unit.range.toString() + "\n";
+				if(game.data.isMuted){
+					me.audio.unmute("Broken_Reality");
+					game.data.isMuted = false;
 				}
-				else{
-					this.textData = "";
+				else {
+					me.audio.mute("Broken_Reality");
+					game.data.isMuted = true;
 				}
-				}catch(e){}
-				return false;
-				
-      		}
-      	));
+			}
+		);
 
-      	this.addChild(new textBox(645, 100, new me.Font("Arial", 18, "white"), "", 
-			function(){
-				try{
-				if(game.data.lastTile.structure != null)
-				{
-					this.font.set("Arial", 18, game.data.lastTile.structure.player);
-					this.textData = ""+ 
-						game.data.lastTile.structure.typeName + "\n" +
-						"HP\u2665 " + game.data.lastTile.structure.health.toString() + "/20\n";
-				}
-				else{
-					this.textData = "";
-				}
-				}catch(e){}
-				return false;
-				
-      		}
-      	));
-
-		// add the object at pos (10,10), z index 4
-		this.addChild((new button(644, 376, "attack", 100, 50,
+		attackButton = new button(644, 376, "attack", 100, 50,
 			function(){
 				console.log("Attck button");
-		})), Infinity);
-
-		this.addChild((new button(748, 376, "capture", 100, 50,
+			}
+		);
+		captureButton = new button(748, 376, "capture", 100, 50,
 			function(){
 				game.data.map.capture(game.data.lastTile);
-		})), Infinity);
-
-		this.addChild((new button(644, 430, "wait", 100, 50,
+			}
+		);
+		waitButton = new button(644, 430, "wait", 100, 50,
 			function(){
-				console.log("add one to unit state");
-		})), Infinity);
+				game.data.lastTile.unit.moved(game.data.lastTile);
+			}
+		);
 
-		this.addChild((new button(748, 430, "endturn", 100, 50,
+		endTurnButton = new button(748, 430, "endturn", 100, 50,
 			function(){
-				game.data.switchTurn();
-		})), Infinity);
+				// if(!game.HUDInstance.hasChild(confirmTurnButton)){
+				 	game.data.switchTurn();
+				// 	game.HUDInstance.addChild(confirmTurnButton, Infinity);
+				// }
+			}
+		);
+
+		// confirmTurnButton = new button(320-50, 240-25, "startTurn", 100, 50,
+		// 	function(){
+		// 		game.HUDInstance.removeChild(this, true);
+		// 	}
+		// );
+
+		this.addChild(muteButton, Infinity);
+		this.addChild(attackButton, Infinity);
+		this.addChild(captureButton, Infinity);
+		this.addChild(waitButton, Infinity);
+		this.addChild(endTurnButton, Infinity);
 
 		// add HUD background - Jay Oster Sprung Fever example!
-		this.addChild(new game.ColorLayer(
+		HUDBackground = new game.ColorLayer(
             new me.Vector2d(),
             213,
             480,
             "HUD bg",
             "black"
-        ));
+        );
+        this.addChild(HUDBackground, 0);
 	}
 });
 /** 

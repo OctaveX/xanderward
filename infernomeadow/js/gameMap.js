@@ -63,7 +63,8 @@ mapObject.prototype.move = function (oldTile, newTile){
 	
 	layer.clearTile(oldTile.x, oldTile.y);
 	
-	this.unlightTiles();	
+	//moved to the 'moved' fucntion.
+	//this.unlightTiles();	
 };
 
 
@@ -333,6 +334,7 @@ mapObject.prototype.unitAttack = function(attackTile, defendTile){
 mapObject.prototype.killUnit = function(toKill){
 	
 	toKill.unit = null;
+	toKill.unitType = null;
 	
 	var tileMap = me.game.currentLevel;
 	var layer = tileMap.getLayerByName("Unit");
@@ -367,27 +369,83 @@ mapObject.prototype.capture = function(captureTile){
 	
 		//reset the tile to what color it should be.
 		if (captureTile.unit.player == "red"){
-			if (captureTile.structure.typeName == "Theme Park")
+			if (captureTile.structure.typeName == "Theme Park"){
+				//take income away from green if they lost a park
+				if (captureTile.structure.player == "green")
+					game.data.green.income--;
+					
 				layer.setTile(captureTile.x, captureTile.y, this.ENUM.RThe);
-			
+				game.data.red.income++;
+			}
 			else if(captureTile.structure.typeName == "Factory")
 				layer.setTile(captureTile.x, captureTile.y, this.ENUM.RFac);
 				
-			else if(captureTile.structure.typeName == "Base")
-				layer.setTile(captureTile.x, captureTile.y, this.ENUM.RBas);
-		}
+			else if(captureTile.structure.typeName == "Base") {
+				game.data.GAMEOVER.end = true;		
+				game.data.GAMEOVER.winner = "red";
+			}
+		} 
 		else{
-			if (captureTile.structure.typeName == "Theme Park")
+			if (captureTile.structure.typeName == "Theme Park") {
+				//take income away from red if they lost a park
+				if (captureTile.structure.player == "red")
+					game.data.red.income--;
+					
 				layer.setTile(captureTile.x, captureTile.y, this.ENUM.GThe);
-			
+				game.data.green.income++;
+			}
 			else if(captureTile.structure.typeName == "Factory")
 				layer.setTile(captureTile.x, captureTile.y, this.ENUM.GFac);
 				
-			else if(captureTile.structure.typeName == "Base")
-				layer.setTile(captureTile.x, captureTile.y, this.ENUM.GBas);		
+			else if(captureTile.structure.typeName == "Base"){
+				game.data.GAMEOVER.end = true;		
+				game.data.GAMEOVER.winner = "green";
+			}
 		}
 
 	}
+};
+
+//builds a unit on a factory 
+mapObject.prototype.buildUnit = function(tile, unitId){
+	//build only from factories and your own factories.
+	try{
+		if (tile.structure.typeName != "Factory" && tile.structure.player == game.data.turn)
+			return false;
+	}
+	catch(e){
+		//There was no structure on the tile....
+		return false;
+	}
+	
+	//can't build if there is a unit present.
+	if (tile.unit != null)
+		return false;
+	
+	var newUnit = new Unit();
+	newUnit.init(unitId);
+	
+	if (game.data.turn == "red" && newUnit.cost >= game.data.red.money)
+		return false;
+		
+	if (game.data.turn == "green" && newUnit.cost >= game.data.green.money)
+		return false;
+		
+	var tileMap = me.game.currentLevel;
+	var layer = tileMap.getLayerByName("Unit");
+	
+	layer.setTile(tile.x, tile.y, unitId);
+	
+	tile.unit = newUnit();
+	
+	//subtract cost of unit
+	if(tile.player == "red")
+		game.data.red.money -= tile.unit.cost;
+	else
+		game.data.green.money -= tile.unit.cost;
+	
+	
+	return true;
 };
 	
 	

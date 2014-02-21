@@ -15,7 +15,9 @@ game.PlayScreen = me.ScreenObject.extend({
         // load a level
         me.levelDirector.loadLevel("map1");
         
-		me.game.add(new game.HUD.Container());
+		game.HUDInstance = new game.HUD.Container();
+		// add our HUD to the game world	
+		me.game.add(game.HUDInstance);
 		//binds 'enter' as the action key
 		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
 	   
@@ -31,6 +33,12 @@ game.PlayScreen = me.ScreenObject.extend({
 		game.data.lastTile = new container();
 		
 		
+		me.audio.stopTrack();
+		
+		//MUSIC!
+		me.audio.playTrack("Broken_Reality");
+		
+		
 	},
 	
 	/**
@@ -38,7 +46,8 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	update: function(){
 		//	check player turn should go here
-		
+		// if(game.HUDInstance.hasChild(confirmTurnButton))
+		// 	return false;
 		if (me.input.isKeyPressed('enter')){
 			
 			var x = Math.floor(me.input.mouse.pos.x / 32);
@@ -109,8 +118,7 @@ game.PlayScreen = me.ScreenObject.extend({
 				}
 				else
 					game.data.lastTile = null;
-					
-					return;		
+						
 			
 			}
 			catch(e) {
@@ -122,9 +130,18 @@ game.PlayScreen = me.ScreenObject.extend({
 		}
 		else 
 		{
+			//END GAME CONDITIONS HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if (game.data.GAMEOVER.end == true){
+			
+			// do SOMETHING!
+			
+				console.log("Game over man... game over " + game.data.GAMEOVER.winner +" has won!");
+				
+				game.data.reset();
+				me.state.change(me.state.MENU);
+			}
 			return false;
 		}
-		
 		//redraw.
 		return true;
 	},
@@ -134,9 +151,7 @@ game.PlayScreen = me.ScreenObject.extend({
 			
 			game.data.map.move(game.data.lastTile, tile);
 			
-			tile.unit.moved();
-			
-			game.data.moved.push(tile);
+			tile.unit.moved(tile);
 			
 			game.data.lastTile = null;
 			
@@ -192,5 +207,10 @@ game.PlayScreen = me.ScreenObject.extend({
 	onDestroyEvent: function() {
 		// remove the HUD from the game world
 		me.game.world.removeChild(me.game.world.getEntityByProp("name", "HUD")[0]);
+		this.parent();
+		
+		
+		me.audio.stopTrack();
+		
 	}
 });
