@@ -63,6 +63,7 @@ game.PlayScreen = me.ScreenObject.extend({
 					
 					if (this.moveUnit(tile)){
 						this.invalidate = true;
+						//Indicate that a structure is present on HUD
 						return;
 					}						
 				}
@@ -95,13 +96,20 @@ game.PlayScreen = me.ScreenObject.extend({
 			}
 			catch(e) {
 				// didn't click on a unit. 
+				game.data.map.unlightTiles();
+				game.data.lastTile = null;
 				console.log(e)
 			}
 			
 			//STRUCTURES!
 			try {
-				if(game.data.lastTile.structure.type != null)
-					//do something
+				if(tile.structure != null){
+					game.data.lastTile = tile;
+					//display structure data on HUD
+				}
+				else
+					game.data.lastTile = null;
+					
 					return;		
 			
 			}
@@ -153,6 +161,20 @@ game.PlayScreen = me.ScreenObject.extend({
 		
 		return false;
 	},
+	
+	captureStructure : function(tile) {
+		//cannot capture your own structure.
+		if (tile.unitType >= game.map.ENUM.RInf && tile.unitType <= game.map.ENUM.RCle 
+			&& tile.structureType >= game.map.ENUM.RBas && tile.structureType <= game.map.ENUM.RFac)
+			return false;
+		else if(tile.unitType >= game.map.ENUM.GInf && tile.unitType <= game.map.ENUM.GCle 
+			&& tile.structureType >= game.map.ENUM.GBas && tile.structureType <= game.map.ENUM.GFac)
+			return false;
+			
+		tile.unit.capture(tile.structureType)
+		
+	},
+	
 	
 	//drawing on update
 	draw: function(context){

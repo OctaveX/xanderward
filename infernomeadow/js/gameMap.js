@@ -16,7 +16,15 @@ function mapObject(){
 	    GTan : 67,
 		GLAV : 68,
 	    GArt : 69,
-        GCle : 70
+        GCle : 70,
+		RFac : 40,
+		RBas : 38,
+		RThe : 39,
+		GFac : 46,
+		GBas : 44,
+		GThe : 45,
+		NFac : 34,
+		NThe : 33
 	}
 }
 // sets up all the containers for a map of a give size
@@ -55,7 +63,7 @@ mapObject.prototype.move = function (oldTile, newTile){
 	
 	layer.clearTile(oldTile.x, oldTile.y);
 	
-	this.unlightTiles();;
+	this.unlightTiles();	
 };
 
 
@@ -92,14 +100,13 @@ mapObject.prototype.checkTile = function(newTile, unitType){
 	return true;
 };
 
-mapObject.prototype.checkTileUnits = function(newTile, unitType){
-	// can't move through enemy units.
-	if ((unitType >= this.ENUM.RInf && unitType <= this.ENUM.RCle) && 
-		(newTile.unitType >= this.ENUM.GInf && newTile.unitType <= this.ENUM.GCle))
-		return false;
+mapObject.prototype.checkTileUnits = function(newTile, oldTile){
+	// no unit present
+	if (newTile.unit == null)
+		return true;
 		
-	else if ((unitType >= this.ENUM.GInf && unitType <= this.ENUM.GCle) && 
-		(newTile.unitType >= this.ENUM.RInf && newTile.unitType <= this.ENUM.RCle))
+	// can't move through enemy units.	
+	if (newTile.unit.player != oldTile.unit.player)
 		return false;
 		
 	return true;
@@ -109,7 +116,7 @@ mapObject.prototype.previewMove = function (startTile){
 	
 	this.unlightTiles();
 	
-	this.populatePossible(startTile, startTile.unit.movemax, false);
+	this.populatePossible(startTile, startTile.unit.moveMax, false);
 	
 	this.highlightTiles(51, false, startTile.unitType);
 
@@ -143,8 +150,9 @@ mapObject.prototype.populatePossible = function (startTile, distance, attack){
 			console.log("off the map!");
 			return;
 		}
-			
-		if (mapobject.checkTile(place, startTile.unitType) && (attack || mapobject.checkTileUnits(place, startTile.unitType))){
+		
+		//check the terrain allows us there and check that we aren't moving through enemy units
+		if (mapobject.checkTile(place, startTile.unitType) && (attack || mapobject.checkTileUnits(place, startTile))){
 			for (var i = 0; i < mapobject.movePossible.length; i++){
 				if (i == index)
 					continue;
@@ -160,12 +168,13 @@ mapObject.prototype.populatePossible = function (startTile, distance, attack){
 				});
 				
 				// make val negative for similar units. But keep them in use.
-				if ((startTile.unitType >= mapobject.ENUM.RInf && startTile.unitType <= mapobject.ENUM.RCle) && 
-					(place.unitType >= mapobject.ENUM.RInf && place.unitType <= mapobject.ENUM.RCle) || 
-					(startTile.unitType >= mapobject.ENUM.GInf && startTile.unitType <= mapobject.ENUM.GCle) && 
-					(place.unitType >= mapobject.ENUM.GInf && place.unitType <= mapobject.ENUM.GCle))					
-					mapobject.movePossible[mapobject.movePossible.length-1].val *= -1;
-					
+				try{
+					if (startTile.unit.player == place.unit.player)					
+						mapobject.movePossible[mapobject.movePossible.length-1].val *= -1;
+					}
+				catch(e){
+					//there was no unit on the space.
+				}
 				//Odd, but it keeps from holding the same object as others. Now it's a copy.		
 		}
 	};
@@ -230,7 +239,6 @@ mapObject.prototype.previewAttack = function (startTile){
 	this.highlightTiles(52, true, startTile.unitType);
 };
 
-
 mapObject.prototype.highlightTiles = function(tileType, attack, unitType){
 	//highlight tiles based on preview move.
 // 50 for unit
@@ -269,9 +277,10 @@ mapObject.prototype.unlightTiles = function(){
 			// don't overwrite a tile that is greyed out. mmkay.
 			// first 'if' ensures taht unit exists, second checks if it is in greyed out state.
 			if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unitType != null)
-				if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unit.state == 2)
+				if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unit.state == 2){					
+					layer.setTile(this.movePossible[i].x, this.movePossible[i].y, 53);
 					continue;
-			
+				}
 			layer.clearTile(this.movePossible[i].x, this.movePossible[i].y);
 		}
 	}
@@ -303,12 +312,81 @@ mapObject.prototype.ungrey = function(tile){
 
 mapObject.prototype.unitAttack = function(attackTile, defendTile){
 	
+	// ensure that they are not attacking a team mate unless they are a cleric
+	if (attackTile.unit.player == defendTile.unit.player &&( attackTile.unitType != this.ENUM.RCle && attackTile.unitType != this.ENUM.GCle))
+		return false;
+	
 	//verify that the defend tile is in the crosshairs aka movePossible array.
 	for (var i = 0; i < this.movePossible.length; i++)
 		if(defendTile.x == this.movePossible[i].x && defendTile.y == this.movePossible[i].y){
 			attackTile.unit.attack(defendTile.unit);
+			this.greyOut(attackTile);
+			if (attackTile.unit.health <= 0)
+				this.killUnit(attackTile);
+			else if(defendTile.unit.health <= 0)
+				this.killUnit(defendTile);
+				
+			return;
+		}
+};
+
+mapObject.prototype.killUnit = function(toKill){
+	
+	toKill.unit = null;
+	
+	var tileMap = me.game.currentLevel;
+	var layer = tileMap.getLayerByName("Unit");
+	
+	layer.clearTile(toKill.x, toKill.y);
+
+};
+
+mapObject.prototype.capture = function(captureTile){
+
+	//must be in attack state
+	if (captureTile.unit.state != 1)
+		return false;
+	
+	//must be able to attack buildings
+	if	(captureTile.unit.typeName =="Artillery" || captureTile.unit.typeName == "Tank" || captureTile.unit == "IFV")
+		return false;
+
+	this.greyOut(captureTile);
+	
+	//heal a structure if it is owned.
+	if (captureTile.unit.player == captureTile.structure.player){
+		captureTile.unit.capture(captureTile.structure, -1);		
+	}
+	else if	(captureTile.unit.capture(captureTile.structure, 1)) {
+		//CAPTURED!
+		captureTile.structure.health = 20;
+		captureTile.structure.player = captureTile.unit.player;
 		
-		this.greyOut(attackTile);
+		var tileMap = me.game.currentLevel;
+		var layer = tileMap.getLayerByName("Structures");
+	
+		//reset the tile to what color it should be.
+		if (captureTile.unit.player == "red"){
+			if (captureTile.structure.typeName == "Theme Park")
+				layer.setTile(captureTile.x, captureTile.y, this.ENUM.RThe);
+			
+			else if(captureTile.structure.typeName == "Factory")
+				layer.setTile(captureTile.x, captureTile.y, this.ENUM.RFac);
+				
+			else if(captureTile.structure.typeName == "Base")
+				layer.setTile(captureTile.x, captureTile.y, this.ENUM.RBas);
+		}
+		else{
+			if (captureTile.structure.typeName == "Theme Park")
+				layer.setTile(captureTile.x, captureTile.y, this.ENUM.GThe);
+			
+			else if(captureTile.structure.typeName == "Factory")
+				layer.setTile(captureTile.x, captureTile.y, this.ENUM.GFac);
+				
+			else if(captureTile.structure.typeName == "Base")
+				layer.setTile(captureTile.x, captureTile.y, this.ENUM.GBas);		
+		}
+
 	}
 };
 	
@@ -339,10 +417,14 @@ container.prototype.init = function(i, j){
 		this.unit.init(this.unitType);
 	}
 	else 
-		this.unit == null;
+		this.unit = null;
 		
-	if (this.structureType != null)
+	if (this.structureType != null){
 		this.structure = new Structure();
+		this.structure.init(this.structureType);
+	}
+	else
+		this.structure = null;
 };
 
 container.prototype.getId = function (layerName, x, y){

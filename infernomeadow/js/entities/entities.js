@@ -3,7 +3,7 @@
  */
 function Unit(){
 	health = 0;
-	movemax = 0;
+	moveMax = 0;
 	attArmour = 0;
 	attInfantry = 0;
 	armour = 0;
@@ -80,8 +80,9 @@ Unit.prototype.init = function(type){
 };
 
 Unit.prototype.initInfantry = function(){
+	this.typeName = "Infantry";
 	this.health = 10;
-	this.movemax = 7;
+	this.moveMax = 7;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -89,8 +90,9 @@ Unit.prototype.initInfantry = function(){
 	this.range = 1;
 };
 Unit.prototype.initRocket = function(){
+	this.typeName = "Rocket";
 	this.health = 10;
-	this.movemax = 7;
+	this.moveMax = 7;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -98,8 +100,9 @@ Unit.prototype.initRocket = function(){
 	this.range = 1;
 };
 Unit.prototype.initSniper = function(){
+	this.typeName = "Sniper";
 	this.health = 10;
-	this.movemax = 7;
+	this.moveMax = 7;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -107,8 +110,9 @@ Unit.prototype.initSniper = function(){
 	this.range = 3;
 };
 Unit.prototype.initTank = function(){
+	this.typeName = "Tank";
 	this.health = 10;
-	this.movemax = 5;
+	this.moveMax = 5;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -116,8 +120,9 @@ Unit.prototype.initTank = function(){
 	this.range = 1;
 };
 Unit.prototype.initLav = function(){
+	this.typeName = "IFV";
 	this.health = 10;
-	this.movemax = 5;
+	this.moveMax = 5;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -125,8 +130,9 @@ Unit.prototype.initLav = function(){
 	this.range = 1;
 };
 Unit.prototype.initArtillery = function(){
+	this.typeName = "Artillery";
 	this.health = 10;
-	this.movemax = 5;
+	this.moveMax = 5;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -134,8 +140,9 @@ Unit.prototype.initArtillery = function(){
 	this.range = 3;
 };
 Unit.prototype.initCleric = function(){
+	this.typeName = "Cleric";
 	this.health = 10;
-	this.movemax = 8;
+	this.moveMax = 8;
 	this.attArmour = 0;
 	this.attInfantry = 0;
 	this.armour = 0;
@@ -146,11 +153,25 @@ Unit.prototype.initCleric = function(){
 Unit.prototype.attack = function(enemy){
 	//Xander's algorighm here
 	//enemy will the the unit under fire. 
+	enemy.health--;
 	this.state = 2;
 };
 
-Unit.prototype.capture = function(structure){
-	//do the things here
+Unit.prototype.capture = function(structure, multiplier){
+
+	//for friendly structures the multiplier is -1 for healing
+	structure.health -= (this.health * multiplier);
+	
+	// can't heal beyond max health. If captured then shit gets changed.
+	this.state = 2;
+	
+	if (structure.health > 20)
+		structure.health = 20;		
+	else if (structure.health <=0)
+		return true;
+		
+	//not captured.
+	return false;
 };
 
 Unit.prototype.moved = function(){
@@ -159,13 +180,79 @@ Unit.prototype.moved = function(){
 
 Unit.prototype.reset = function(){
 	this.state = 0;
-}
+};
 
 /**
  *	STRUCTURES! Horay!
  */
  
- function Structure(owner){
+function Structure(){
 	health = 10;
-	player = 'owner';
+	player = '';
+	typeName = "";
 }
+
+Structure.prototype.init = function(type){
+	
+	switch (type){
+		case 33:
+			this.player = "grey";
+			this.initThemePark();
+			break;
+		case 34:
+			this.player = "grey";
+			this.initFactory();
+			break;
+		case 38:
+			this.player = "red";
+			this.initBase();
+			break;
+		case 39:
+			this.player = "red";
+			this.initThemePark();
+			break;
+		case 40:
+			this.player = "red";
+			this.initFactory();
+			break;
+		case 44:
+			this.player = "green";
+			this.initBase();
+			break;
+		case 45:
+			this.player = "green";
+			this.initThemePark();
+			break;
+		case 46:
+			this.player = "green";
+			this.initFactory();
+			break;
+		default:
+			this == null;
+			console.log("All your base are belong to us!?!");
+			break;
+	}
+};
+
+Structure.prototype.initFactory = function() {
+	this.health = 20;
+	this.production = null;
+	this.typeName = "Factory";
+};
+
+Structure.prototype.initThemePark = function(){
+	this.health = 20;
+	this.income = 1;
+	this.typeName = "Theme Park";
+
+};
+
+Structure.prototype.initBase = function(){
+	this.health = 20;
+	this.typeName = "Base";
+};
+
+
+
+
+

@@ -19,6 +19,9 @@ game.resources = [
     /* Buttons */
     {name: "button", type:"image", src: "data/img/gui/button.png"},
     {name: "endturn", type:"image", src: "data/img/gui/endturn.png"},
+    {name: "wait", type:"image", src: "data/img/gui/wait.png"},
+    {name: "capture", type:"image", src: "data/img/gui/capture.png"},
+    {name: "attack", type:"image", src: "data/img/gui/attack.png"},
 
 	/* Atlases 
 	 * @example

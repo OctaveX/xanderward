@@ -18,6 +18,10 @@ var game = {
 				var tile = this.moved.pop();
 				tile.unit.reset();
 				this.map.ungrey(tile);
+				
+				//Build FACTORY SHIT
+				
+				//GIVE INCOME
 			}
 							
 		},
