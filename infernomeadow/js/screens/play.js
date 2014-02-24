@@ -35,8 +35,8 @@ game.PlayScreen = me.ScreenObject.extend({
 		
 		me.audio.stopTrack();
 		
-		// //MUSIC!
-		// me.audio.playTrack("Broken_Reality");
+		//MUSIC!
+		me.audio.playTrack("Broken_Reality");
 		
 		
 	},

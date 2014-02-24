@@ -64,18 +64,24 @@ game.HUD.Container = me.ObjectContainer.extend({
 
 		endTurnButton = new button(748, 430, "endturn", 100, 50,
 			function(){
-				// if(!game.HUDInstance.hasChild(confirmTurnButton)){
+				if(!game.data.buttonExists){
 				 	game.data.switchTurn();
-				// 	game.HUDInstance.addChild(confirmTurnButton, Infinity);
-				// }
+					game.HUDInstance.addChild(confirmTurnButton, Infinity);
+					game.data.buttonExists = true;
+					me.state.pause(true);
+				}
 			}
 		);
 
-		// confirmTurnButton = new button(320-50, 240-25, "startTurn", 100, 50,
-		// 	function(){
-		// 		game.HUDInstance.removeChild(this, true);
-		// 	}
-		// );
+		confirmTurnButton = new button(320-50, 240-25, "startTurn", 100, 50,
+			function(){
+				if(game.data.buttonExists){
+					game.HUDInstance.removeChild(this, true);
+					game.data.buttonExists = false;
+					me.state.resume(true);
+				}
+			}
+		);
 
 		this.addChild(muteButton, Infinity);
 		this.addChild(attackButton, Infinity);

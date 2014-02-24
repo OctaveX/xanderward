@@ -411,6 +411,7 @@ mapObject.prototype.buildUnit = function(tile, unitId){
 	//build only from factories and your own factories.
 	try{
 		if (tile.structure.typeName != "Factory" && tile.structure.player == game.data.turn)
+			//Put Factory menu stuff in here...?
 			return false;
 	}
 	catch(e){

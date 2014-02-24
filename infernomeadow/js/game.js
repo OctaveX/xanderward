@@ -5,6 +5,7 @@ var game = {
 	// an object where to store game information
 	data : {
 		isMuted : false,
+		buttonExists : false,
 		turn : "red",
 		map : null,
 		lastTile : null,
