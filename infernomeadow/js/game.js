@@ -2,6 +2,8 @@
 /* Game namespace */
 var game = {
 
+	AI : null,
+	
 	// an object where to store game information
 	data : {
 		isMuted : false,
@@ -50,9 +52,11 @@ var game = {
 			this.green.income = 0;
 			this.red.money = 0;
 			this.green.money = 0;		
-		}
-	},
-	
+		}, 
+		
+		//SWITCH THIS TO A COLOR TO SET IT TO AI
+		AI : null,
+	},	
 	
 	// Run on page load.
 	"onload" : function () {
@@ -81,6 +85,7 @@ var game = {
 		// Initialize melonJS and display a loading screen.
 		me.state.change(me.state.LOADING);
 		
+		//this.AI = new AI();
 	},
 
 	// Run on game resources loaded.
@@ -104,22 +109,6 @@ var game = {
 
 		// Start the game.
 		me.state.change(me.state.MENU);
-	
-	}, 
-
-	// a few convenience functions. 
-	utils: {
-	
-		positionTile1D : function(input) {
-			input = input / 32;
-			return Math.floor(input);		
-		},
-		
-		positionTile2D : function(input) {
-			input.x = this.positionTile1D(input.x);
-			input.y = this.positionTile1D(input.y);
-		}
-	
 	
 	}
 };

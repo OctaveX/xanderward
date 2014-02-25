@@ -42,6 +42,8 @@ var textBox = me.Renderable.extend({
 
       //Declare how the text will update
       this.update = updateFunction;
+
+      this.updateWhenPaused = true;
    },
    /**
     * draw the score

@@ -12,6 +12,10 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	onResetEvent: function() {
 	
+	
+		//set up AI
+		game.AI = new AI();
+		
         // load a level
         me.levelDirector.loadLevel("map1");
         
@@ -32,12 +36,10 @@ game.PlayScreen = me.ScreenObject.extend({
 		game.data.map.init(sizex, sizey);
 		game.data.lastTile = new container();
 		
+		me.audio.stopTrack();
 		
-		// me.audio.stopTrack();
-		
-		// //MUSIC!
+		//MUSIC!
 		// me.audio.playTrack("Broken_Reality");
-		
 		
 	},
 	
@@ -48,6 +50,12 @@ game.PlayScreen = me.ScreenObject.extend({
 		//	check player turn should go here
 		// if(game.HUDInstance.hasChild(confirmTurnButton))
 		// 	return false;
+		
+		if (game.data.AI == game.data.turn){
+			game.AI.turn();
+			game.data.switchTurn();
+		}
+		
 		if (me.input.isKeyPressed('enter')){
 			
 			var x = Math.floor(me.input.mouse.pos.x / 32);
@@ -71,8 +79,9 @@ game.PlayScreen = me.ScreenObject.extend({
 				if (game.data.lastTile.unit.state == 0){
 					
 					if (this.moveUnit(tile)){
-						this.invalidate = true;
-						//Indicate that a structure is present on HUD
+						this.invalidate = true;						
+						game.data.map.previewAttack(tile);						
+						game.data.lastTile = tile;
 						return;
 					}						
 				}
@@ -114,7 +123,7 @@ game.PlayScreen = me.ScreenObject.extend({
 			try {
 				if(tile.structure != null){
 					game.data.lastTile = tile;
-					if(tile.structure.typeName == "Factory" && tile.structure.player == game.data.turn){
+					if(tile.structure.typeName == "Factory" && tile.structure.player == game.data.turn && tile.unit == null){
 						console.log("this is your factory!");
 						game.HUDInstance.addChild(infantryBuyButton, Infinity);
 						game.HUDInstance.addChild(rocketBuyButton, Infinity);
@@ -124,11 +133,13 @@ game.PlayScreen = me.ScreenObject.extend({
 						game.HUDInstance.addChild(artilleryBuyButton, Infinity);
 						game.HUDInstance.addChild(clericBuyButton, Infinity);
 						game.HUDInstance.addChild(cancelBuyButton, Infinity);
+						
 						game.data.factoryMenuActive = true;
-						game.data.map.unlightTiles();
-						game.data.lastTile = null;
+						//game.data.map.unlightTiles();
+						//game.data.lastTile = null;
 
-						me.state.pause(true);
+						me.state.pause(false);
+						//return false;
 					}
 					//display structure data on HUD
 				}

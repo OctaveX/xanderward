@@ -30,6 +30,8 @@ game.HUD.Container = me.ObjectContainer.extend({
 		//0
 		
       	this.addChild(turnText);
+      	this.addChild(redMoneyText);
+      	this.addChild(greenMoneyText);
       	this.addChild(unitInfo);
       	this.addChild(sturctureInfo);
 		// // add the object at pos (10,10), z index 4
@@ -59,6 +61,7 @@ game.HUD.Container = me.ObjectContainer.extend({
 		waitButton = new button(644, 430, "wait", 100, 50,
 			function(){
 				game.data.lastTile.unit.moved(game.data.lastTile);
+				game.data.map.previewAttack(game.data.lastTile);
 			}
 		);
 
@@ -87,7 +90,7 @@ game.HUD.Container = me.ObjectContainer.extend({
 			}
 		);
 
-		this.addChild(muteButton, Infinity);
+		//this.addChild(muteButton, Infinity);
 		this.addChild(attackButton, Infinity);
 		this.addChild(captureButton, Infinity);
 		this.addChild(waitButton, Infinity);
@@ -119,56 +122,116 @@ game.HUD.Container = me.ObjectContainer.extend({
 			game.data.factoryMenuActive = false;
 			me.state.resume(false);
         }
-        infantryBuyButton = new button(320-60, 240-25, "button", 100, 50,
+        infantryBuyButton = new button(115, 0+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RInf);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GInf);	
+			        }
+
+					//game.data.map.buildUnit(game.data.lastTile, unitid)
+					//game.data.lastTile
+
+					// RInf : 56,
+					// RRoc : 57,
+					// RSni : 58,
+					// RTan : 59,
+					// RLAV : 60,
+					// RArt : 61,
+					// RCle : 62,
+					// GInf : 64,
+					// GRoc : 65,
+				 //    GSni : 66,
+				 //    GTan : 67,
+					// GLAV : 68,
+				 //    GArt : 69,
+			  //       GCle : 70,
 					removeFactoryMenu();
 				}
 			}
 		);
-		rocketBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		rocketBuyButton = new button(115, 60+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RRoc);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GRoc);	
+			        }
 					removeFactoryMenu();
 				}
 			}
 		);
-		sniperBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		sniperBuyButton = new button(115, 120+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RSni);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GSni);	
+			        }
 					removeFactoryMenu();
 				}
 			}
 		);
-		tankBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		clericBuyButton = new button(115, 180+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RCle);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GCle);	
+			        }
 					removeFactoryMenu();
 				}
 			}
 		);
-		ifvBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		tankBuyButton = new button(325, 0+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RTan);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GTan);	
+			        }
 					removeFactoryMenu();
 				}
 			}
 		);
-		artilleryBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		ifvBuyButton = new button(325, 60+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RLAV);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GLAV);	
+			        }
 					removeFactoryMenu();
 				}
 			}
 		);
-		clericBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		artilleryBuyButton = new button(325, 120+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RArt);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GArt);	
+			        }
 					removeFactoryMenu();
 				}
 			}
 		);
-		cancelBuyButton = new button(320-60, 240-25, "button", 100, 50,
+		cancelBuyButton = new button(325, 180+125, "button", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					removeFactoryMenu();

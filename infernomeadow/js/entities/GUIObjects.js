@@ -17,7 +17,21 @@ var turnText = new textBox(645, 0, new me.Font("Arial", 20, "white"), "",
       		}
       	);
 
-var unitInfo = new textBox(645, 25, new me.Font("Arial", 18, "white"), "", 
+var redMoneyText = new textBox(645, 25, new me.Font("Arial", 18, "red"), "", 
+			function(){
+				this.textData = ""+ game.data.red.money+"\u20AB";
+      			return false;
+      		}
+      	);
+
+var greenMoneyText = new textBox(745, 25, new me.Font("Arial", 18, "green"), "", 
+			function(){
+				this.textData = game.data.green.money+"\u20AB";
+      			return false;
+      		}
+      	);
+
+var unitInfo = new textBox(645, 50, new me.Font("Arial", 18, "white"), "", 
 			function(){
 				try{
 				if(game.data.lastTile.unit != null)
@@ -28,9 +42,11 @@ var unitInfo = new textBox(645, 25, new me.Font("Arial", 18, "white"), "",
 						"HP\u2665 " + game.data.lastTile.unit.health.toString() + "/10\n" +
 						"Movement " +game.data.lastTile.unit.moveMax.toString() + "\n" +
 						"Attack Range\u2316 " +game.data.lastTile.unit.range.toString() + "\n";
+						return true;
 				}
 				else{
 					this.textData = "";
+					return true;
 				}
 				}catch(e){}
 				return false;
@@ -38,7 +54,7 @@ var unitInfo = new textBox(645, 25, new me.Font("Arial", 18, "white"), "",
       		}
       	);
 
-var sturctureInfo = new textBox(645, 100, new me.Font("Arial", 18, "white"), "", 
+var sturctureInfo = new textBox(645, 125, new me.Font("Arial", 18, "white"), "", 
 			function(){
 				try{
 				if(game.data.lastTile.structure != null)
@@ -47,9 +63,11 @@ var sturctureInfo = new textBox(645, 100, new me.Font("Arial", 18, "white"), "",
 					this.textData = ""+ 
 						game.data.lastTile.structure.typeName + "\n" +
 						"HP\u2665 " + game.data.lastTile.structure.health.toString() + "/20\n";
+					return true;
 				}
 				else{
 					this.textData = "";
+					return true;
 				}
 				}catch(e){}
 				return false;

@@ -62,7 +62,19 @@ mapObject.prototype.move = function (oldTile, newTile){
 	
 	
 	layer.clearTile(oldTile.x, oldTile.y);
+
+	//If not an AI guy do some things.
 	
+	if (game.data.turn != game.data.AI){
+	
+		for (var i = 0; i < game.AI.enemyUnits.length; i++){
+			if (oldTile.x == game.AI.enemyUnits[i].x && oldTile.y == game.AI.enemyUnits[i].y){
+				game.AI.enemyUnits.splice(i, 1);
+				break;
+			}
+		}
+		game.AI.enemyUnits.push(newTile);	
+	}
 	//moved to the 'moved' fucntion.
 	//this.unlightTiles();	
 };
@@ -182,12 +194,13 @@ mapObject.prototype.populatePossible = function (startTile, distance, attack){
 	
 	while(true){	
 		
-			//queueing tiles.
+		if (index >= this.movePossible.length || index > 200)
+			break;
+		
+			//queueing tiles. 
 		if (Math.abs(this.movePossible[index].val) >= distance)
 			break;		
-			
-		if (index >= 200)
-			break;
+		
 			
 		this.movePossible[index].x++;	
 		
@@ -314,9 +327,10 @@ mapObject.prototype.ungrey = function(tile){
 mapObject.prototype.unitAttack = function(attackTile, defendTile){
 	
 	// ensure that they are not attacking a team mate unless they are a cleric
-	if (attackTile.unit.player == defendTile.unit.player &&( attackTile.unitType != this.ENUM.RCle && attackTile.unitType != this.ENUM.GCle))
+	if (attackTile.unit.player == defendTile.unit.player &&( attackTile.unitType != this.ENUM.RCle && attackTile.unitType != this.ENUM.GCle)){
+		this.unlightTiles();
 		return false;
-	
+	}
 	//verify that the defend tile is in the crosshairs aka movePossible array.
 	for (var i = 0; i < this.movePossible.length; i++)
 		if(defendTile.x == this.movePossible[i].x && defendTile.y == this.movePossible[i].y){
@@ -410,7 +424,7 @@ mapObject.prototype.capture = function(captureTile){
 mapObject.prototype.buildUnit = function(tile, unitId){
 	//build only from factories and your own factories.
 	try{
-		if (tile.structure.typeName != "Factory" && tile.structure.player == game.data.turn)
+		if (tile.structure.typeName != "Factory" || tile.structure.player != game.data.turn)
 			//Put Factory menu stuff in here...?
 			return false;
 	}
@@ -426,10 +440,10 @@ mapObject.prototype.buildUnit = function(tile, unitId){
 	var newUnit = new Unit();
 	newUnit.init(unitId);
 	
-	if (game.data.turn == "red" && newUnit.cost >= game.data.red.money)
+	if (game.data.turn == "red" && newUnit.cost > game.data.red.money)
 		return false;
 		
-	if (game.data.turn == "green" && newUnit.cost >= game.data.green.money)
+	if (game.data.turn == "green" && newUnit.cost > game.data.green.money)
 		return false;
 		
 	var tileMap = me.game.currentLevel;
@@ -437,10 +451,13 @@ mapObject.prototype.buildUnit = function(tile, unitId){
 	
 	layer.setTile(tile.x, tile.y, unitId);
 	
-	tile.unit = newUnit();
-	
+	tile.unit = newUnit;
+	tile.unitType = unitId;
+	tile.unit.state = 2;
+	game.data.moved.push(tile);
+	this.greyOut(tile);
 	//subtract cost of unit
-	if(tile.player == "red")
+	if(tile.structure.player == "red")
 		game.data.red.money -= tile.unit.cost;
 	else
 		game.data.green.money -= tile.unit.cost;
@@ -484,6 +501,34 @@ container.prototype.init = function(i, j){
 	}
 	else
 		this.structure = null;
+		
+	
+	//Init AI baby, if exists.
+	if (game.data.AI != null){
+		
+		//check if it was a unit
+		if (this.unit != null){			
+			// AI unit
+			if (game.data.AI == this.unit.player){
+				game.AI.units.push(this);
+			}
+			//Not AI unit
+			else if (this.unit != null){
+				game.AI.enemyUnits.push(this);
+			}
+		}
+		if (this.structure != null){
+			//AI structure
+			if (game.data.AI == this.structure.player){
+				game.AI.buildings.push(this);
+			}
+			else if (this.structure != null){
+				game.AI.enemyBuildings.push(this);
+			}
+		}
+	
+	
+	}
 };
 
 container.prototype.getId = function (layerName, x, y){

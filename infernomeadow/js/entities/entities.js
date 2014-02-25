@@ -11,6 +11,7 @@ function Unit(){
 	// 0 is move, 1 is attack/capture, 2 is done for the turn. 
 	state = 0;
 	player = 0;
+	cost = 0;
 }
 
 // ew.
@@ -82,9 +83,9 @@ Unit.prototype.init = function(type){
 Unit.prototype.initInfantry = function(){
 	this.typeName = "Infantry";
 	this.health = 10;
-	this.moveMax = 7;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.moveMax = 4;
+	this.attArmour = 10;
+	this.attInfantry = 55;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
@@ -93,68 +94,68 @@ Unit.prototype.initInfantry = function(){
 Unit.prototype.initRocket = function(){
 	this.typeName = "Rocket";
 	this.health = 10;
-	this.moveMax = 7;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.moveMax = 3;
+	this.attArmour = 55;
+	this.attInfantry = 15;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 1;
+	this.cost = 3;
 };
 Unit.prototype.initSniper = function(){
 	this.typeName = "Sniper";
 	this.health = 10;
-	this.moveMax = 7;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.moveMax = 3;
+	this.attArmour = 17;
+	this.attInfantry = 65;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 3;
-	this.cost = 1;
+	this.cost = 4;
 };
 Unit.prototype.initTank = function(){
 	this.typeName = "Tank";
 	this.health = 10;
-	this.moveMax = 5;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.moveMax = 4;
+	this.attArmour = 55;
+	this.attInfantry = 25;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 1;
+	this.cost = 5;
 };
 Unit.prototype.initLav = function(){
 	this.typeName = "IFV";
 	this.health = 10;
 	this.moveMax = 5;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.attArmour = 12;
+	this.attInfantry = 65;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 1;
+	this.cost = 4;
 };
 Unit.prototype.initArtillery = function(){
 	this.typeName = "Artillery";
 	this.health = 10;
-	this.moveMax = 5;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.moveMax = 3;
+	this.attArmour = 65;
+	this.attInfantry = 35;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 3;
-	this.cost = 1;
+	this.cost = 6;
 };
 Unit.prototype.initCleric = function(){
 	this.typeName = "Cleric";
 	this.health = 10;
-	this.moveMax = 8;
-	this.attArmour = 0;
-	this.attInfantry = 0;
+	this.moveMax = 3;
+	this.attArmour = -50;
+	this.attInfantry = -50;
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 1;
+	this.cost = 5;
 };
 
 Unit.prototype.attack = function(enemy){
