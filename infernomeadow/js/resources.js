@@ -45,8 +45,8 @@ game.resources = [
 	 */	
 	 
 	 
-	 {name: "Broken_Reality", type: "audio", src: "data/bgm/", channel : 1},	 
-	 {name: "Take_A_Chance", type: "audio", src: "data/bgm/", channel : 1}
+	 // {name: "Broken_Reality", type: "audio", src: "data/bgm/", channel : 1},	 
+	 // {name: "Take_A_Chance", type: "audio", src: "data/bgm/", channel : 1}
 
 	/* Sound effects. 
 	 * @example

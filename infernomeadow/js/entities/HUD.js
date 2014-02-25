@@ -64,10 +64,14 @@ game.HUD.Container = me.ObjectContainer.extend({
 
 		endTurnButton = new button(748, 430, "endturn", 100, 50,
 			function(){
-				if(!game.data.buttonExists){
+				if(!game.data.buttonExists && !game.data.factoryMenuActive){
 				 	game.data.switchTurn();
 					game.HUDInstance.addChild(confirmTurnButton, Infinity);
 					game.data.buttonExists = true;
+
+					game.data.map.unlightTiles();
+					game.data.lastTile = null;
+
 					me.state.pause(true);
 				}
 			}
@@ -78,7 +82,7 @@ game.HUD.Container = me.ObjectContainer.extend({
 				if(game.data.buttonExists){
 					game.HUDInstance.removeChild(this, true);
 					game.data.buttonExists = false;
-					me.state.resume(true);
+					me.state.resume(false);
 				}
 			}
 		);
@@ -98,6 +102,79 @@ game.HUD.Container = me.ObjectContainer.extend({
             "black"
         );
         this.addChild(HUDBackground, 0);
+
+
+
+        //Factory menu
+        removeFactoryMenu = function(){
+        	game.HUDInstance.removeChild(infantryBuyButton, true);
+        	game.HUDInstance.removeChild(rocketBuyButton, true);
+        	game.HUDInstance.removeChild(sniperBuyButton, true);
+        	game.HUDInstance.removeChild(tankBuyButton, true);
+        	game.HUDInstance.removeChild(ifvBuyButton, true);
+        	game.HUDInstance.removeChild(artilleryBuyButton, true);
+        	game.HUDInstance.removeChild(clericBuyButton, true);
+        	game.HUDInstance.removeChild(cancelBuyButton, true);
+
+			game.data.factoryMenuActive = false;
+			me.state.resume(false);
+        }
+        infantryBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		rocketBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		sniperBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		tankBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		ifvBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		artilleryBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		clericBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
+		cancelBuyButton = new button(320-60, 240-25, "button", 100, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					removeFactoryMenu();
+				}
+			}
+		);
 	}
 });
 /** 

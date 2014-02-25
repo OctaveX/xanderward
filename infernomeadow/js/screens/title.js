@@ -20,8 +20,8 @@ game.TitleScreen = me.ScreenObject.extend({
 	   
 	   
 		//TUNESKYS
-		if (me.audio.getCurrentTrack() == null)
-			me.audio.playTrack("Take_A_Chance");
+		// if (me.audio.getCurrentTrack() == null)
+		// 	me.audio.playTrack("Take_A_Chance");
 		
 		//binds an event listener to mouse move
 		//me.input.registerPointerEvent("mousemove", /*target*/, this.mouseMove.bind(this));

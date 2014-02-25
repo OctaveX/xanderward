@@ -33,10 +33,10 @@ game.PlayScreen = me.ScreenObject.extend({
 		game.data.lastTile = new container();
 		
 		
-		me.audio.stopTrack();
+		// me.audio.stopTrack();
 		
-		//MUSIC!
-		me.audio.playTrack("Broken_Reality");
+		// //MUSIC!
+		// me.audio.playTrack("Broken_Reality");
 		
 		
 	},
@@ -114,6 +114,22 @@ game.PlayScreen = me.ScreenObject.extend({
 			try {
 				if(tile.structure != null){
 					game.data.lastTile = tile;
+					if(tile.structure.typeName == "Factory" && tile.structure.player == game.data.turn){
+						console.log("this is your factory!");
+						game.HUDInstance.addChild(infantryBuyButton, Infinity);
+						game.HUDInstance.addChild(rocketBuyButton, Infinity);
+						game.HUDInstance.addChild(sniperBuyButton, Infinity);
+						game.HUDInstance.addChild(tankBuyButton, Infinity);
+						game.HUDInstance.addChild(ifvBuyButton, Infinity);
+						game.HUDInstance.addChild(artilleryBuyButton, Infinity);
+						game.HUDInstance.addChild(clericBuyButton, Infinity);
+						game.HUDInstance.addChild(cancelBuyButton, Infinity);
+						game.data.factoryMenuActive = true;
+						game.data.map.unlightTiles();
+						game.data.lastTile = null;
+
+						me.state.pause(true);
+					}
 					//display structure data on HUD
 				}
 				else

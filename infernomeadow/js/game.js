@@ -6,6 +6,7 @@ var game = {
 	data : {
 		isMuted : false,
 		buttonExists : false,
+		factoryMenuActive : false,
 		turn : "red",
 		map : null,
 		lastTile : null,
