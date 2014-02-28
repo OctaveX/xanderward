@@ -11,6 +11,7 @@ var button = me.GUI_Object.extend(
       // parent constructor
       this.parent(x, y, settings);
       this.onClick = onClickFunction;
+      this.updateWhenPaused = true;
    }
 });
 

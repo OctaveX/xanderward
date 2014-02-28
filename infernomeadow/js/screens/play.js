@@ -90,7 +90,7 @@ game.PlayScreen = me.ScreenObject.extend({
 					if (this.attackUnit(tile)){
 						this.invalidate = true;
 						return;
-					}						
+					}	
 				}
 			}
 			catch (e){
@@ -124,28 +124,13 @@ game.PlayScreen = me.ScreenObject.extend({
 				if(tile.structure != null){
 					game.data.lastTile = tile;
 					if(tile.structure.typeName == "Factory" && tile.structure.player == game.data.turn && tile.unit == null){
-						console.log("this is your factory!");
-						game.HUDInstance.addChild(infantryBuyButton, Infinity);
-						game.HUDInstance.addChild(rocketBuyButton, Infinity);
-						game.HUDInstance.addChild(sniperBuyButton, Infinity);
-						game.HUDInstance.addChild(tankBuyButton, Infinity);
-						game.HUDInstance.addChild(ifvBuyButton, Infinity);
-						game.HUDInstance.addChild(artilleryBuyButton, Infinity);
-						game.HUDInstance.addChild(clericBuyButton, Infinity);
-						game.HUDInstance.addChild(cancelBuyButton, Infinity);
-						
-						game.data.factoryMenuActive = true;
-						//game.data.map.unlightTiles();
-						//game.data.lastTile = null;
-
-						me.state.pause(false);
-						//return false;
+						game.HUDInstance.addFactoryMenu();
 					}
 					//display structure data on HUD
 				}
 				else
-					game.data.lastTile = null;
-						
+					game.data.lastTile = tile;
+					game.data.map.unlightTiles();
 			
 			}
 			catch(e) {
@@ -191,14 +176,15 @@ game.PlayScreen = me.ScreenObject.extend({
 	attackUnit : function(tile) {
 		if(game.data.turn == game.data.lastTile.unit.player 
 			&& tile.unit != null
+			&& (tile.unit.player != game.data.lastTile.unit.player || game.data.lastTile.unit.typeName == "Cleric")
 			&& (tile.x != game.data.lastTile.x
 			|| tile.y != game.data.lastTile.y)) {
 			          
-			game.data.map.unitAttack(game.data.lastTile, tile);
-		
-			game.data.lastTile = null;
-			
-			return true;
+			if (game.data.map.unitAttack(game.data.lastTile, tile)){
+				game.data.lastTile = null;
+				return true;
+			}					
+				
 		}
 		
 		return false;

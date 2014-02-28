@@ -160,8 +160,27 @@ Unit.prototype.initCleric = function(){
 
 Unit.prototype.attack = function(enemy){
 	//Xander's algorighm here
-	//enemy will the the unit under fire. 
-	enemy.health--;
+	if (enemy.typeName == "Infantry" || enemy.typeName == "Rocket" || enemy.typeName == "Sniper" || enemy.typeName == "Cleric"){
+	    enemy.health -= Math.floor(((this.attInfantry+(Math.random()*10))* this.health)/100);
+	}
+	else{
+		enemy.health -= Math.floor(((this.attArmour+(Math.random()*10))* this.health)/100);	
+	}
+
+
+	if(enemy.health > 10){
+		enemy.health = 10;
+	}
+    //Check for if ranged unit is attacking no counter damage is possible
+    if(!(enemy.typeName == "Artillery" || enemy.typeName == "Sniper" || enemy.typeName == "Cleric" || this.typeName == "Cleric")){
+	    if (this.typeName == "Infantry" || this.typeName == "Rocket"){
+		    this.health -= Math.floor(((enemy.attInfantry+(Math.random()*10))* enemy.health)/100);
+		}
+		else if (this.typeName == "IFV" || this.typeName == "Tank"){
+		    this.health -= Math.floor(((enemy.attArmour+(Math.random()*10))* enemy.health)/100);
+		}
+	}
+
 	this.state = 2;
 };
 

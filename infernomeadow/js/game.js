@@ -55,12 +55,13 @@ var game = {
 		}, 
 		
 		//SWITCH THIS TO A COLOR TO SET IT TO AI
-		AI : null,
+		AI : null
 	},	
 	
 	// Run on page load.
 	"onload" : function () {
 		// Initialize the video.
+		me.sys.fps = 30;
 		if (!me.video.init("screen", 853, 480, true, 'auto')) {
 			alert("Your browser does not support HTML5 canvas.");
 			return;

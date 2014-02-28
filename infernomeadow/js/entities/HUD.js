@@ -29,30 +29,13 @@ game.HUD.Container = me.ObjectContainer.extend({
 		// add our child score object at the top left corner
 		//0
 		
+		
       	this.addChild(turnText);
       	this.addChild(redMoneyText);
       	this.addChild(greenMoneyText);
       	this.addChild(unitInfo);
       	this.addChild(sturctureInfo);
 		// // add the object at pos (10,10), z index 4
-		muteButton = new button(825, 0, "mute", 25, 25,
-			function(){
-				if(game.data.isMuted){
-					me.audio.unmute("Broken_Reality");
-					game.data.isMuted = false;
-				}
-				else {
-					me.audio.mute("Broken_Reality");
-					game.data.isMuted = true;
-				}
-			}
-		);
-
-		attackButton = new button(644, 376, "attack", 100, 50,
-			function(){
-				console.log("Attck button");
-			}
-		);
 		captureButton = new button(748, 376, "capture", 100, 50,
 			function(){
 				game.data.map.capture(game.data.lastTile);
@@ -89,13 +72,6 @@ game.HUD.Container = me.ObjectContainer.extend({
 				}
 			}
 		);
-
-		//this.addChild(muteButton, Infinity);
-		this.addChild(attackButton, Infinity);
-		this.addChild(captureButton, Infinity);
-		this.addChild(waitButton, Infinity);
-		this.addChild(endTurnButton, Infinity);
-
 		// add HUD background - Jay Oster Sprung Fever example!
 		HUDBackground = new game.ColorLayer(
             new me.Vector2d(),
@@ -104,25 +80,13 @@ game.HUD.Container = me.ObjectContainer.extend({
             "HUD bg",
             "black"
         );
-        this.addChild(HUDBackground, 0);
 
+		this.addChild(captureButton, 4);
+		this.addChild(waitButton, 4);
+		this.addChild(endTurnButton, 4);
+		this.addChild(HUDBackground, 1);
 
-
-        //Factory menu
-        removeFactoryMenu = function(){
-        	game.HUDInstance.removeChild(infantryBuyButton, true);
-        	game.HUDInstance.removeChild(rocketBuyButton, true);
-        	game.HUDInstance.removeChild(sniperBuyButton, true);
-        	game.HUDInstance.removeChild(tankBuyButton, true);
-        	game.HUDInstance.removeChild(ifvBuyButton, true);
-        	game.HUDInstance.removeChild(artilleryBuyButton, true);
-        	game.HUDInstance.removeChild(clericBuyButton, true);
-        	game.HUDInstance.removeChild(cancelBuyButton, true);
-
-			game.data.factoryMenuActive = false;
-			me.state.resume(false);
-        }
-        infantryBuyButton = new button(115, 0+125, "button", 200, 50,
+        infantryBuyButton = new button(115, 0+125, "infantryButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					if(game.data.turn == "red"){
@@ -131,29 +95,11 @@ game.HUD.Container = me.ObjectContainer.extend({
 			        else{
 			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GInf);	
 			        }
-
-					//game.data.map.buildUnit(game.data.lastTile, unitid)
-					//game.data.lastTile
-
-					// RInf : 56,
-					// RRoc : 57,
-					// RSni : 58,
-					// RTan : 59,
-					// RLAV : 60,
-					// RArt : 61,
-					// RCle : 62,
-					// GInf : 64,
-					// GRoc : 65,
-				 //    GSni : 66,
-				 //    GTan : 67,
-					// GLAV : 68,
-				 //    GArt : 69,
-			  //       GCle : 70,
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-		rocketBuyButton = new button(115, 60+125, "button", 200, 50,
+		rocketBuyButton = new button(115, 60+125, "rocketButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					if(game.data.turn == "red"){
@@ -162,11 +108,11 @@ game.HUD.Container = me.ObjectContainer.extend({
 			        else{
 			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GRoc);	
 			        }
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-		sniperBuyButton = new button(115, 120+125, "button", 200, 50,
+		sniperBuyButton = new button(115, 120+125, "sniperButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					if(game.data.turn == "red"){
@@ -175,11 +121,11 @@ game.HUD.Container = me.ObjectContainer.extend({
 			        else{
 			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GSni);	
 			        }
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-		clericBuyButton = new button(115, 180+125, "button", 200, 50,
+		clericBuyButton = new button(115, 180+125, "clericButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					if(game.data.turn == "red"){
@@ -188,24 +134,11 @@ game.HUD.Container = me.ObjectContainer.extend({
 			        else{
 			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GCle);	
 			        }
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-		tankBuyButton = new button(325, 0+125, "button", 200, 50,
-			function(){
-				if(game.data.factoryMenuActive){
-					if(game.data.turn == "red"){
-			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RTan);
-			        }
-			        else{
-			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GTan);	
-			        }
-					removeFactoryMenu();
-				}
-			}
-		);
-		ifvBuyButton = new button(325, 60+125, "button", 200, 50,
+		ifvBuyButton = new button(325, 0+125, "lavButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					if(game.data.turn == "red"){
@@ -214,11 +147,24 @@ game.HUD.Container = me.ObjectContainer.extend({
 			        else{
 			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GLAV);	
 			        }
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-		artilleryBuyButton = new button(325, 120+125, "button", 200, 50,
+		tankBuyButton = new button(325, 60+125, "tankButton", 200, 50,
+			function(){
+				if(game.data.factoryMenuActive){
+					if(game.data.turn == "red"){
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.RTan);
+			        }
+			        else{
+			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GTan);	
+			        }
+					game.HUDInstance.removeFactoryMenu();
+				}
+			}
+		);
+		artilleryBuyButton = new button(325, 120+125, "artilleryButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
 					if(game.data.turn == "red"){
@@ -227,18 +173,53 @@ game.HUD.Container = me.ObjectContainer.extend({
 			        else{
 			        	game.data.map.buildUnit(game.data.lastTile, game.data.map.ENUM.GArt);	
 			        }
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-		cancelBuyButton = new button(325, 180+125, "button", 200, 50,
+		cancelBuyButton = new button(325, 180+125, "cancelButton", 200, 50,
 			function(){
 				if(game.data.factoryMenuActive){
-					removeFactoryMenu();
+					game.HUDInstance.removeFactoryMenu();
 				}
 			}
 		);
-	}
+		factoryMenuBackground = new button(100, 80, "factoryMenu", 450, 300,
+			function(){
+			}
+		);
+	},
+	addFactoryMenu : function () {
+		console.log("this is your factory!");
+		this.addChild(infantryBuyButton, Infinity);
+		this.addChild(rocketBuyButton, Infinity);
+		this.addChild(sniperBuyButton, Infinity);
+		this.addChild(tankBuyButton, Infinity);
+		this.addChild(ifvBuyButton, Infinity);
+		this.addChild(artilleryBuyButton, Infinity);
+		this.addChild(clericBuyButton, Infinity);
+		this.addChild(cancelBuyButton, Infinity);
+		this.addChild(factoryMenuBackground, 0);
+		
+		game.data.factoryMenuActive = true;
+
+		me.state.pause(false);
+		return true;
+    },
+    removeFactoryMenu : function(){
+    	this.removeChild(infantryBuyButton, true);
+    	this.removeChild(rocketBuyButton, true);
+    	this.removeChild(sniperBuyButton, true);
+    	this.removeChild(tankBuyButton, true);
+    	this.removeChild(ifvBuyButton, true);
+    	this.removeChild(artilleryBuyButton, true);
+    	this.removeChild(clericBuyButton, true);
+    	this.removeChild(cancelBuyButton, true);
+    	this.removeChild(factoryMenuBackground, true);
+
+		game.data.factoryMenuActive = false;
+		me.state.resume(false);
+    }
 });
 /** 
  * a basic Color Layer from Jay Oster Spring Fever Game

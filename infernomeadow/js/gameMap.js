@@ -165,7 +165,7 @@ mapObject.prototype.populatePossible = function (startTile, distance, attack){
 		}
 		
 		//check the terrain allows us there and check that we aren't moving through enemy units
-		if (mapobject.checkTile(place, startTile.unitType) && (attack || mapobject.checkTileUnits(place, startTile))){
+		if (attack || (mapobject.checkTile(place, startTile.unitType) &&  mapobject.checkTileUnits(place, startTile))){
 			for (var i = 0; i < mapobject.movePossible.length; i++){
 				if (i == index)
 					continue;
@@ -341,8 +341,11 @@ mapObject.prototype.unitAttack = function(attackTile, defendTile){
 			else if(defendTile.unit.health <= 0)
 				this.killUnit(defendTile);
 				
-			return;
+			return true;
 		}
+		
+	// have iterated through array and found no match
+	return false;
 };
 
 mapObject.prototype.killUnit = function(toKill){
@@ -355,6 +358,7 @@ mapObject.prototype.killUnit = function(toKill){
 	
 	layer.clearTile(toKill.x, toKill.y);
 
+	this.ungrey(toKill);
 };
 
 mapObject.prototype.capture = function(captureTile){

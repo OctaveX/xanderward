@@ -34,6 +34,13 @@ AI.prototype.turn = function(){
 
 };
 
+//check distance. Find close spot based on that. 
+// have move distance. 
+
+// TODO add special cases for cleric, artillery, and snipers. 
+// TODO add seeking to structures
+// TODO prioritize attacking structures
+
 AI.prototype.findMove = function(unit){
 		
 		
@@ -49,12 +56,13 @@ AI.prototype.findMove = function(unit){
 	for (var j = 0; j < this.enemyUnits.length; j++){
 	
 		var enemy = this.enemyUnits[j];
+		
 		try{
 			var newpos = game.data.map.tile[enemy.x+1][enemy.y];
 		
 			if (game.data.map.validMove(newpos, unit)){
 		
-				return this.move(newpos, unit);
+				return this.move(newpos, unit, enemy);
 			}
 		}
 		catch(e){
@@ -66,7 +74,7 @@ AI.prototype.findMove = function(unit){
 		
 			if (game.data.map.validMove(newpos, unit)){
 		
-				return this.move(newpos, unit);
+				return this.move(newpos, unit, enemy);
 			}
 		}		
 		catch(e){
@@ -78,7 +86,7 @@ AI.prototype.findMove = function(unit){
 		
 			if (game.data.map.validMove(newpos, unit)){
 		
-				return this.move(newpos, unit);
+				return this.move(newpos, unit, enemy);
 			}
 		}
 		catch(e){
@@ -90,7 +98,7 @@ AI.prototype.findMove = function(unit){
 		
 			if (game.data.map.validMove(newpos, unit)){
 		
-				return this.move(newpos, unit);
+				return this.move(newpos, unit, enemy);
 			}
 		}
 		catch(e){
@@ -131,7 +139,7 @@ AI.prototype.findMove = function(unit){
 };
 
 // moves the unit
-AI.prototype.move = function(newPos, oldPos){
+AI.prototype.move = function(newPos, oldPos, enemy){
 	try{
 	
 		game.data.map.move(oldPos, newPos);
@@ -142,20 +150,34 @@ AI.prototype.move = function(newPos, oldPos){
 	
 		this.units.push(newPos);
 		
+		if (enemy != null){
+			return this.attackUnit(newPos, enemy);				
+		}	
+		
+		//there is a structure on the tile	
+		if (newPos.structure != null)
+			return this.captureStructure(newPos);
+			
 		return true;
 		
 	}
 	catch(e){
+		return false;
 	}
-	return false;
+	
+	return true;
 };
 
+// attack a guy or something.
 AI.prototype.attackUnit = function (attacker, defender){
-	return false;
+	game.data.map.previewAttack(attacker);
+	game.data.map.unitAttack(attacker, defender);
+	return true;
 };
 
 AI.prototype.captureStructure = function (tile){
-	return false;
+	game.data.map.capture(tile);	
+	return true;
 };
 /*
 //turn  C:\Users\Matthew\Documents\myschool\my schoolwork\2013-2014\design\boilerplate-master\Git repo\js\entities\AI.js

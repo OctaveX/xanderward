@@ -24,6 +24,18 @@ game.resources = [
     {name: "startTurn", type:"image", src: "data/img/gui/startTurn.png"},
     {name: "mute", type:"image", src: "data/img/gui/mute.png"},
 
+
+    {name: "infantryButton", type:"image", src: "data/img/gui/infantryButton.png"},
+    {name: "rocketButton", type:"image", src: "data/img/gui/rocketButton.png"},
+    {name: "sniperButton", type:"image", src: "data/img/gui/sniperButton.png"},
+    {name: "clericButton", type:"image", src: "data/img/gui/clericButton.png"},
+    {name: "lavButton", type:"image", src: "data/img/gui/lavButton.png"},
+    {name: "tankButton", type:"image", src: "data/img/gui/tankButton.png"},
+    {name: "artilleryButton", type:"image", src: "data/img/gui/artilleryButton.png"},
+    {name: "cancelButton", type:"image", src: "data/img/gui/cancelButton.png"},
+
+    {name: "factoryMenu", type:"image", src: "data/img/gui/factoryMenu.png"},
+
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},
