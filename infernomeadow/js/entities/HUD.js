@@ -191,6 +191,9 @@ game.HUD.Container = me.ObjectContainer.extend({
 	},
 	addFactoryMenu : function () {
 		console.log("this is your factory!");
+
+		this.removeChild(HUDBackground, true);
+
 		this.addChild(infantryBuyButton, Infinity);
 		this.addChild(rocketBuyButton, Infinity);
 		this.addChild(sniperBuyButton, Infinity);
@@ -201,6 +204,8 @@ game.HUD.Container = me.ObjectContainer.extend({
 		this.addChild(cancelBuyButton, Infinity);
 		this.addChild(factoryMenuBackground, 0);
 		
+		this.addChild(HUDBackground, 1);
+
 		game.data.factoryMenuActive = true;
 
 		me.state.pause(false);
