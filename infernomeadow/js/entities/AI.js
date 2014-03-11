@@ -20,6 +20,14 @@ AI.prototype.turn = function(){
 	for (var i = 0; i < this.units.length; i++){
 	
 		var unit = this.units[i];
+		
+		//check for null unit aka it died
+		if (unit.unit == null){		
+			this.units.splice(i, 1);
+			i--;
+			continue;
+		}
+		
 		if (unit.unit.state != 0)
 			break;
 		// if unit moved, take the tile out of the array.
@@ -28,9 +36,6 @@ AI.prototype.turn = function(){
 			i--;
 		}
 	}
-	
-	//now shit has been moved. 
-	//make it kill stuff.
 
 };
 
@@ -38,8 +43,6 @@ AI.prototype.turn = function(){
 // have move distance. 
 
 // TODO add special cases for cleric, artillery, and snipers. 
-// TODO add seeking to structures
-// TODO prioritize attacking structures
 
 AI.prototype.findMove = function(unit){
 		
@@ -52,69 +55,100 @@ AI.prototype.findMove = function(unit){
 	if (game.data.map.movePossible.length == 0)
 		return false;
 			
-	//scroll through all enemies. 
-	for (var j = 0; j < this.enemyUnits.length; j++){
+			
 	
-		var enemy = this.enemyUnits[j];
+	
+	// check for structures to kill or heal 
+	if ((unit.unit.typeName != "LAV" && unit.unit.typeName != "Tank" && unit.unit.typeName != "Artillery")) { //must be a unit that can capture.
+		for(var j = 0; j < game.data.map.movePossible.length; j++){
 		
-		try{
-			var newpos = game.data.map.tile[enemy.x+1][enemy.y];
-		
-			if (game.data.map.validMove(newpos, unit)){
-		
-				return this.move(newpos, unit, enemy);
-			}
-		}
-		catch(e){
-			//not a point on the map
-		}
-		
-		try{
-			var newpos = game.data.map.tile[enemy.x-1][enemy.y];
-		
-			if (game.data.map.validMove(newpos, unit)){
-		
-				return this.move(newpos, unit, enemy);
-			}
-		}		
-		catch(e){
-			//not a point on the map
-		}
+			var checkTile = game.data.map.tile[game.data.map.movePossible[j].x][game.data.map.movePossible[j].y];
 			
-		try{
-			var newpos = game.data.map.tile[enemy.x][enemy.y-1];
-		
-			if (game.data.map.validMove(newpos, unit)){
-		
-				return this.move(newpos, unit, enemy);
-			}
-		}
-		catch(e){
-			//not a point on the map
-		}
+			for (var strucCount = 0; strucCount < this.enemyBuildings.length; strucCount++){
 			
-		try{
-			var newpos = game.data.map.tile[enemy.x][enemy.y+1];
-		
-			if (game.data.map.validMove(newpos, unit)){
-		
-				return this.move(newpos, unit, enemy);
+				//move to a structure if it is an enemy and can be hit!
+				if (checkTile == this.enemyBuildings[strucCount] && checkTile.unit == null){
+					
+					//check if we add to our buildings
+					if (this.move(checkTile, unit, null)){
+						this.enemyBuildings.splice(strucCount, 1);						
+						this.buildings.push(checkTile);
+					}
+					
+					return true;
+				}
 			}
-		}
-		catch(e){
-			//not a point on the map
+			
+			for (var strucCount = 0; strucCount < this.buildings.length; strucCount++){
+			
+				//move to a structure if it is a freindly and needs healing
+				if (checkTile == this.buildings[strucCount] 
+				&& checkTile.unit == null
+				&& this.buildings[strucCount].structure.health != 20){
+				
+					return this.move(checkTile, unit, null);
+					
+					
+				}
+			}		
 		}
 	}
-	// check for structures to kill
 	
 	
-	try{
-		//can't pop cause then it won't exists!
+	
+	//scroll through all possible moves, check if preview attack has something.  
+	if (game.data.map.movePossible.length > 0){
+		for (var j = 0; j < game.data.map.movePossible.length; j++){
+				
+			
+			var tempTile = game.data.map.tile[game.data.map.movePossible[j].x][game.data.map.movePossible[j].y];			
+			
+			// make sure it's a valid move
+			if (!game.data.map.validMove(tempTile, unit))
+				continue;				
+				
+			unit.unit.state = 1;	
+			tempTile.unit = unit.unit;
+			
+			game.data.map.previewAttack(tempTile);
+			
+			//see if you can attack, then move there!
+			if (game.data.map.movePossible.length != 0){
+				for (var k=0; k < game.data.map.movePossible.length; k++){
+					
+					var enemyTile = game.data.map.tile[game.data.map.movePossible[k].x][game.data.map.movePossible[k].y];
+					
+					if (enemyTile == null)
+						continue;
+						
+					//check that it is a valid person to attack
+					if (enemyTile.unit != null && game.data.map.movePossible[k].val != 0) {
+						//cleric exempt from friendly assault
+						if (game.data.map.movePossible[k].val > 0
+							|| (unit.unit.typeName == "Cleric")) {			
+							
+							//reset data
+							unit.unit.state = 0;
+							tempTile.unit = null;
+							game.data.map.previewMove(unit);
+							game.data.lastTile = unit;
+						
+							//move!
+							return this.move(tempTile, unit, enemyTile);
+						}
+					}
+				}
+			}
+			
+			//reset data
+			unit.unit.state = 0;
+			tempTile.unit = null;
+			game.data.map.previewMove(unit);
+			game.data.lastTile = unit;
+			
+		}
 		
-		if (game.data.map.movePossible.length <= 1)
-			return false;
-		
-		//get a valid spot to move
+		//there are possible moves, but none have an enemy to attack!
 		while (true){
 			newpos = game.data.map.movePossible.pop();
 			game.data.map.movePossible.unshift(newpos);
@@ -124,22 +158,20 @@ AI.prototype.findMove = function(unit){
 		
 		var newTile = game.data.map.tile[newpos.x][newpos.y];
 	
-		if (game.data.map.validMove(newTile, unit)){
-	
-			return this.move(newTile, unit);
+		if (game.data.map.validMove(newTile, unit)){	
+			//no unit to attack.
+			return this.move(newTile, unit, null);
 		}
-	}
-	catch(e){
-		console.log(e);
+		
 		return false;
-		//movepossible is empty.
 	}
-	
-	return true;
+	else 
+		return false;
+		
 };
 
 // moves the unit
-AI.prototype.move = function(newPos, oldPos, enemy){
+AI.prototype.move = function(newPos, oldPos, enemyTile){
 	try{
 	
 		game.data.map.move(oldPos, newPos);
@@ -150,8 +182,8 @@ AI.prototype.move = function(newPos, oldPos, enemy){
 	
 		this.units.push(newPos);
 		
-		if (enemy != null){
-			return this.attackUnit(newPos, enemy);				
+		if (enemyTile != null){
+			return this.attackUnit(newPos, enemyTile);				
 		}	
 		
 		//there is a structure on the tile	
@@ -172,13 +204,21 @@ AI.prototype.move = function(newPos, oldPos, enemy){
 AI.prototype.attackUnit = function (attacker, defender){
 	game.data.map.previewAttack(attacker);
 	game.data.map.unitAttack(attacker, defender);
+		
 	return true;
 };
 
+//capture shit or whatever.
 AI.prototype.captureStructure = function (tile){
-	game.data.map.capture(tile);	
-	return true;
+	game.data.map.capture(tile);
+
+	//check structure captured!
+	if (tile.structure.player == game.data.AI)
+		return true;
+
+	return false;	
 };
+
 /*
 //turn  C:\Users\Matthew\Documents\myschool\my schoolwork\2013-2014\design\boilerplate-master\Git repo\js\entities\AI.js
 //move all units as close to shit as possible. 

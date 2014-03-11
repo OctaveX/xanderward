@@ -368,7 +368,7 @@ mapObject.prototype.capture = function(captureTile){
 		return false;
 	
 	//must be able to attack buildings
-	if	(captureTile.unit.typeName =="Artillery" || captureTile.unit.typeName == "Tank" || captureTile.unit == "IFV")
+	if	(captureTile.unit.typeName =="Artillery" || captureTile.unit.typeName == "Tank" || captureTile.unit.typeName == "LAV")
 		return false;
 
 	this.greyOut(captureTile);

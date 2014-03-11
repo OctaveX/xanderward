@@ -1,5 +1,3 @@
-
-
 /**
  * a HUD container and child items
  */
@@ -43,8 +41,10 @@ game.HUD.Container = me.ObjectContainer.extend({
 		);
 		waitButton = new button(644, 430, "wait", 100, 50,
 			function(){
-				game.data.lastTile.unit.moved(game.data.lastTile);
-				game.data.map.previewAttack(game.data.lastTile);
+				if (game.data.lastTile.unit.state != 2) {
+					game.data.lastTile.unit.moved(game.data.lastTile);
+					game.data.map.previewAttack(game.data.lastTile);
+				}
 			}
 		);
 

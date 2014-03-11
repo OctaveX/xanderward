@@ -1,9 +1,6 @@
 
 /* Game namespace */
-var game = {
-
-	AI : null,
-	
+var game = {	
 	// an object where to store game information
 	data : {
 		isMuted : false,
@@ -55,7 +52,7 @@ var game = {
 		}, 
 		
 		//SWITCH THIS TO A COLOR TO SET IT TO AI
-		AI : null
+		AI : ""
 	},	
 	
 	// Run on page load.
@@ -96,9 +93,10 @@ var game = {
 	
 		//set different game states (different files)
 		me.state.set(me.state.PLAY, new game.PlayScreen());
-		me.state.set(me.state.MENU, new game.TitleScreen());
+		me.state.set(me.state.USER, new game.TitleScreen());
+		me.state.set(me.state.MENU, new game.MenuScreen());
 		me.state.set(me.state.CREDITS, new game.CreditsScreen());
-		
+		me.state.set(me.state.GAMEOVER, new game.GameOverScreen());
 		// Preload entities here into the entity pool
 		//me.entityPool.add("mainPlayer", game.PlayerRed);
 
@@ -109,7 +107,7 @@ var game = {
 		me.input.bindKey(me.input.KEY.X,     "jump", true);
 
 		// Start the game.
-		me.state.change(me.state.MENU);
+		me.state.change(me.state.USER);
 	
 	}
 };

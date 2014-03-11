@@ -17,7 +17,7 @@ game.PlayScreen = me.ScreenObject.extend({
 		game.AI = new AI();
 		
         // load a level
-        me.levelDirector.loadLevel("map1");
+        me.levelDirector.loadLevel(game.data.mapName);
         
 		game.HUDInstance = new game.HUD.Container();
 		// add our HUD to the game world	
@@ -149,8 +149,11 @@ game.PlayScreen = me.ScreenObject.extend({
 			
 				console.log("Game over man... game over " + game.data.GAMEOVER.winner +" has won!");
 				
+				tempWinnerText = game.data.GAMEOVER.winner.toString();
+
 				game.data.reset();
-				me.state.change(me.state.MENU);
+
+				me.state.change(me.state.GAMEOVER, tempWinnerText);
 			}
 			return false;
 		}

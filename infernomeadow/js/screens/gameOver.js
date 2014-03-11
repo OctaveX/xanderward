@@ -1,32 +1,30 @@
-game.TitleScreen = me.ScreenObject.extend({
+game.GameOverScreen = me.ScreenObject.extend({
 
 	init: function() {
 		this.parent(true);
 		
-		this.title = me.loader.getImage("title_screen");
 	},
-	
 	/**	
 	 *  action to perform on state change
 	 */
-	onResetEvent: function() {	
-	
+	onResetEvent: function(winner) {	
 		//binds 'enter' as the action key
 		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
 	   
-		me.input.bindKey(me.input.KEY.X, "thex", true);
 		//binds left click to enter
 		me.input.bindMouse(me.input.mouse.LEFT, me.input.KEY.ENTER);
-	   
-	   
-		//TUNESKYS
-		// if (me.audio.getCurrentTrack() == null)
-		// 	me.audio.playTrack("Take_A_Chance");
-		
-		//binds an event listener to mouse move
-		//me.input.registerPointerEvent("mousemove", /*target*/, this.mouseMove.bind(this));
+
+		console.log(winner);
+		if (winner == "red"){
+			this.title = me.loader.getImage("redWin");
+		}
+		else if (winner == "green"){
+			this.title = me.loader.getImage("greenWin");
+		}
+		else {
+			me.state.change(me.state.MENU);
+		}
 	},
-	
 	/**
 	 *	What to do on a screen update
 	 */
@@ -37,21 +35,14 @@ game.TitleScreen = me.ScreenObject.extend({
 			me.state.change(me.state.MENU);
 			return true;
 		}
-		else if (me.input.isKeyPressed("thex")){
-			me.state.change(me.state.CREDITS);
-			return true;
-		}
 		
 		return false;
 	},
-	
-
 	
 	// draw function
     draw: function(context) {
         context.drawImage(this.title, 0, 0);
     },
-	
 	
 	/**	
 	 *  action to perform when leaving this screen (state change)

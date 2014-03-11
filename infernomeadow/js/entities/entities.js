@@ -125,7 +125,7 @@ Unit.prototype.initTank = function(){
 	this.cost = 5;
 };
 Unit.prototype.initLav = function(){
-	this.typeName = "IFV";
+	this.typeName = "LAV";
 	this.health = 10;
 	this.moveMax = 5;
 	this.attArmour = 12;
@@ -167,17 +167,19 @@ Unit.prototype.attack = function(enemy){
 		enemy.health -= Math.floor(((this.attArmour+(Math.random()*10))* this.health)/100);	
 	}
 
-
+	//Check for healing if cleric has healed above 10 health
 	if(enemy.health > 10){
 		enemy.health = 10;
 	}
     //Check for if ranged unit is attacking no counter damage is possible
-    if(!(enemy.typeName == "Artillery" || enemy.typeName == "Sniper" || enemy.typeName == "Cleric" || this.typeName == "Cleric")){
-	    if (this.typeName == "Infantry" || this.typeName == "Rocket"){
-		    this.health -= Math.floor(((enemy.attInfantry+(Math.random()*10))* enemy.health)/100);
-		}
-		else if (this.typeName == "IFV" || this.typeName == "Tank"){
-		    this.health -= Math.floor(((enemy.attArmour+(Math.random()*10))* enemy.health)/100);
+    if(enemy.health > 0){
+	    if(!(enemy.typeName == "Artillery" || enemy.typeName == "Sniper" || enemy.typeName == "Cleric" || this.typeName == "Cleric")){
+		    if (this.typeName == "Infantry" || this.typeName == "Rocket"){
+			    this.health -= Math.floor(((enemy.attInfantry+(Math.random()*10))* enemy.health)/100);
+			}
+			else if (this.typeName == "LAV" || this.typeName == "Tank"){
+			    this.health -= Math.floor(((enemy.attArmour+(Math.random()*10))* enemy.health)/100);
+			}
 		}
 	}
 

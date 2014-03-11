@@ -6,14 +6,15 @@ game.resources = [
 	 */
 	 
 	// Needs to be base64 uncompressed files!!!!!!
-	{name: "TerrainSheet", type:"image", src: "data/img/map/TerrainSheet.png"},
-	{name: "UnitSheet", type:"image", src: "data/img/map/UnitSheet.png"},
+	{name: "TerrainSheet", type:"image", src: "data/map/TerrainSheet.png"},
+	{name: "UnitSheet", type:"image", src: "data/map/UnitSheet.png"},
 	
 	
    // {name: "title_screen", type:"image", src: "data/img/gui/title_screen.png"},
 	
     {name: "title_screen", type:"image", src: "data/img/gui/shell_corp_ inc_ltd_&_co.png"},
     {name: "credits_screen", type:"image", src: "data/img/gui/credits.png"},
+    {name: "menu_screen", type:"image", src: "data/img/gui/menuBackground.png"},
     
     /* Buttons */
     {name: "button", type:"image", src: "data/img/gui/button.png"},
@@ -36,6 +37,9 @@ game.resources = [
 
     {name: "factoryMenu", type:"image", src: "data/img/gui/factoryMenu.png"},
 
+
+    {name: "redWin", type:"image", src: "data/img/redWin.png"},
+    {name: "greenWin", type:"image", src: "data/img/greenWin.png"},
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},
@@ -47,9 +51,9 @@ game.resources = [
 	 * {name: "example01", type: "tmx", src: "data/map/example01.json"},
  	 */
 
-	 {name: "map1", type: "tmx", src: "data/map/Map1.tmx"},
-	 
-
+	{name: "map1", type: "tmx", src: "data/map/Map1.tmx"},
+	{name: "map2", type: "tmx", src: "data/map/Map2.tmx"},
+	{name: "map3", type: "tmx", src: "data/map/Map3.tmx"},
 
 	/* Background music. 
 	 * @example
