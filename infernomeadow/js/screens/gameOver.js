@@ -24,6 +24,7 @@ game.GameOverScreen = me.ScreenObject.extend({
 		else {
 			me.state.change(me.state.MENU);
 		}
+		me.game.reset();
 	},
 	/**
 	 *	What to do on a screen update

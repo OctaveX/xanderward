@@ -7,7 +7,7 @@ var turnText = new textBox(645, 0, new me.Font("Arial", 20, "white"), "",
 			        }
 			        else{
 			           this.font.set("Arial", 20, "green");
-			           this.textData = "Greengo's Turn";
+			           this.textData = "Green's Turn";
 			        }
 
 			        this.turn = game.data.turn;

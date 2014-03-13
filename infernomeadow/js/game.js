@@ -6,6 +6,7 @@ var game = {
 		isMuted : false,
 		buttonExists : false,
 		factoryMenuActive : false,
+		surrenderActive : false,
 		turn : "red",
 		map : null,
 		lastTile : null,
@@ -48,7 +49,10 @@ var game = {
 			this.red.income = 0;
 			this.green.income = 0;
 			this.red.money = 0;
-			this.green.money = 0;		
+			this.green.money = 0;
+			this.buttonExists = false;
+			this.factoryMenuActive = false;
+			this.surrenderActive = false;	
 		}, 
 		
 		//SWITCH THIS TO A COLOR TO SET IT TO AI

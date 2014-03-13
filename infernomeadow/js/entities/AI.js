@@ -66,9 +66,13 @@ AI.prototype.turn = function(unitCount){
 		}
 	}
 	
+	var randomizer;
+	
 	//build units.
 	for (var i = 0; i < this.buildings.length; i++) {
 		if (this.buildings[i].structure.typeName == "Factory"){
+			
+			randomizer = Math.floor(Math.random()*3);
 			
 			//can't build on a unit!
 			if (this.buildings[i].unit != null)
@@ -76,41 +80,55 @@ AI.prototype.turn = function(unitCount){
 			
 			//build according to money.
 			switch (this.AIdetails.money){
+				default:
+				case 12:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.Art);
+						this.units.push(this.buildings[i]);
+						break;
+					}
+				case 11:
+				case 10:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.Tan);
+						this.units.push(this.buildings[i]);
+						break;
+					}
+				case 9:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.Cle);
+						this.units.push(this.buildings[i]);
+						break;		
+					}						
+				case 8:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.LAV);
+						this.units.push(this.buildings[i]);
+						break;
+					}
+				case 7:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.Sni);
+						this.units.push(this.buildings[i]);
+						break;
+					}
+				case 6:
+				case 5:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.Roc);
+						this.units.push(this.buildings[i]);
+						break;
+					}
+				case 4:
+				case 3:
+				case 2:
+					if (randomizer-- == 0){
+						game.data.map.buildUnit(this.buildings[i], this.ENUM.Inf);
+						this.units.push(this.buildings[i]);
+						break;
+					}
 				case 1:
 				case 0:	break;
-				case 2:
-				case 3:
-				case 4: 
-				case 5:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.Inf);
-					this.units.push(this.buildings[i]);
-					break;
-				case 6:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.Roc);
-					this.units.push(this.buildings[i]);
-					break;
-				case 7:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.Sni);
-					this.units.push(this.buildings[i]);
-					break;
-				case 8:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.LAV);
-					this.units.push(this.buildings[i]);
-					break;
-				case 9:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.Cle);
-					this.units.push(this.buildings[i]);
-					break;				
-				case 10:
-				case 11:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.Tan);
-					this.units.push(this.buildings[i]);
-					break;
-				case 12:
-				default:
-					game.data.map.buildUnit(this.buildings[i], this.ENUM.Art);
-					this.units.push(this.buildings[i]);
-					break;
 			}
 		}
 	}

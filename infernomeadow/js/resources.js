@@ -22,6 +22,10 @@ game.resources = [
 
     //HUD buttons
     {name: "button", type:"image", src: "data/img/gui/button.png"},
+
+    {name: "surrenderButton", type:"image", src: "data/img/gui/surrenderButton.png"},
+    {name: "acceptSurrenderButton", type:"image", src: "data/img/gui/acceptSurrender.png"},
+    {name: "cancelSurrenderButton", type:"image", src: "data/img/gui/cancelSurrender.png"},
     {name: "endturn", type:"image", src: "data/img/gui/endturn.png"},
     {name: "wait", type:"image", src: "data/img/gui/wait.png"},
     {name: "capture", type:"image", src: "data/img/gui/capture.png"},

@@ -73,13 +73,13 @@ game.MenuScreen = me.ScreenObject.extend({
 			}
 		);
 
-		me.game.add(new textBox(267, 200-53, new me.Font("Arial", 25, "black"), "Select a map", function(){}), Infinity);
+		me.game.add(new textBox(250, 200-53, new me.Font("Arial", 25, "black"), "Select a map", function(){}), Infinity);
 		me.game.add(new textBox(450, 200-53, new me.Font("Arial", 20, "black"), "1 Player", function(){}), Infinity);
 		me.game.add(new textBox(545, 200-53, new me.Font("Arial", 20, "black"), "2 Players", function(){}), Infinity);
 
-		me.game.add(new textBox(296, 240-53, new me.Font("Arial", 25, "black"), "Classic", function(){}), Infinity);
-		me.game.add(new textBox(300, 300-53, new me.Font("Arial", 25, "black"), "Oasis", function(){}), Infinity);
-		me.game.add(new textBox(275, 360-53, new me.Font("Arial", 25, "black"), "Urban Town", function(){}), Infinity);
+		me.game.add(new textBox(280, 240-53, new me.Font("Arial", 25, "black"), "Classic", function(){}), Infinity);
+		me.game.add(new textBox(290, 300-53, new me.Font("Arial", 25, "black"), "Oasis", function(){}), Infinity);
+		me.game.add(new textBox(225, 360-53, new me.Font("Arial", 25, "black"), "Tom's UrbanTown", function(){}), Infinity);
 
 		me.game.add(new textBox(290, 405-43, new me.Font("Arial", 25, "black"), "Credits", function(){}), Infinity);
 

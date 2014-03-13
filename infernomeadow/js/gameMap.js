@@ -275,8 +275,10 @@ mapObject.prototype.highlightTiles = function(tileType, attack, unitType){
 				continue;
 			}
 			//check to see if there is a unit there or attacking. 
-			if ((this.tile[this.movePossible[i].x][this.movePossible[i].y].unitType != null) || (!attack))			
-				layer.setTile(this.movePossible[i].x, this.movePossible[i].y, tileType);
+			if (this.movePossible[i].x < 20 && this.movePossible[i].x >= 0 && this.movePossible[i].y < 15 && this.movePossible[i].y >= 0) {
+				if ((this.tile[this.movePossible[i].x][this.movePossible[i].y].unitType != null) || (!attack))			
+					layer.setTile(this.movePossible[i].x, this.movePossible[i].y, tileType);
+			}
 		}
 	}
 	catch(e){
@@ -293,12 +295,16 @@ mapObject.prototype.unlightTiles = function(){
 		for (var i = 0; i < this.movePossible.length; i++){		
 			// don't overwrite a tile that is greyed out. mmkay.
 			// first 'if' ensures taht unit exists, second checks if it is in greyed out state.
-			if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unitType != null)
-				if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unit.state == 2){					
-					layer.setTile(this.movePossible[i].x, this.movePossible[i].y, 53);
-					continue;
-				}
-			layer.clearTile(this.movePossible[i].x, this.movePossible[i].y);
+			// super first check that we aren't off teh board!
+			if (this.movePossible[i].x < 20 && this.movePossible[i].x >= 0 && this.movePossible[i].y < 15 && this.movePossible[i].y >= 0) {
+				if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unitType != null)
+					if (this.tile[this.movePossible[i].x][this.movePossible[i].y].unit.state == 2){					
+						layer.setTile(this.movePossible[i].x, this.movePossible[i].y, 53);
+						continue;
+					}
+					
+				layer.clearTile(this.movePossible[i].x, this.movePossible[i].y);
+			}
 		}
 	}
 	catch(e){
@@ -387,7 +393,7 @@ mapObject.prototype.capture = function(captureTile){
 		
 	//heal a structure if it is owned.
 	if (captureTile.unit.player == captureTile.structure.player){
-		if (capturetile.structure.health < 20){
+		if (captureTile.structure.health < 20){
 		
 			captureTile.unit.capture(captureTile.structure, -1);
 			this.greyOut(captureTile);

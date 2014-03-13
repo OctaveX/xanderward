@@ -34,31 +34,76 @@ game.HUD.Container = me.ObjectContainer.extend({
       	this.addChild(unitInfo);
       	this.addChild(sturctureInfo);
 		// // add the object at pos (10,10), z index 4
+
+		surrenderButton = new button(798, 0, "surrenderButton", 50, 50,
+			function(){
+				if (game.data.turn == game.data.AI)
+					return;
+				if(!game.data.buttonExists && !game.data.factoryMenuActive && !game.data.surrenderActive){
+					game.HUDInstance.addChild(acceptSurrenderButton, Infinity);
+					game.HUDInstance.addChild(cancelSurrenderButton, Infinity);
+					game.data.surrenderActive = true;
+				}
+			}
+		);
+
+		acceptSurrenderButton = new button(200, 240-25, "acceptSurrenderButton", 100, 50,
+			function(){
+				if(game.data.surrenderActive){
+					if(game.data.turn == "red"){
+							game.data.GAMEOVER.end = true;		
+							game.data.GAMEOVER.winner = "green";
+						}
+						else{
+							game.data.GAMEOVER.end = true;		
+							game.data.GAMEOVER.winner = "red";
+					}
+				}
+			}
+		);
+
+		cancelSurrenderButton = new button(340, 240-25, "cancelSurrenderButton", 100, 50,
+			function(){
+				if(game.data.surrenderActive){
+					game.HUDInstance.removeChild(this, true);
+					game.HUDInstance.removeChild(acceptSurrenderButton, true);
+					game.data.surrenderActive = false;
+				}
+			}
+		);
+
 		captureButton = new button(748, 376, "capture", 100, 50,
 			function(){
+				try{
+					if (game.data.turn == game.data.AI || game.data.turn != game.data.lastTile.unit.player)
+						return;
+				}
+				catch (e){
+					//not a unit on that tile for some reason.
+					return;
+				}
 				game.data.map.capture(game.data.lastTile);
 			}
 		);
 		waitButton = new button(644, 430, "wait", 100, 50,
 			function(){
+				if (game.data.turn == game.data.AI)
+					return;
 				if (game.data.lastTile.unit.state != 2) {
 					game.data.lastTile.unit.moved(game.data.lastTile);
 					game.data.map.previewAttack(game.data.lastTile);
 				}
 			}
 		);
-
 		endTurnButton = new button(748, 430, "endturn", 100, 50,
 			function(){
-			
-				if (game.data.turn == game.data.AI)
-					return;
-				else if (game.data.AI != null) {					
-				 	game.data.switchTurn();
-					return;
-				}
-			
-				if(!game.data.buttonExists && !game.data.factoryMenuActive){
+				if(!game.data.buttonExists && !game.data.factoryMenuActive && !game.data.surrenderActive){
+					if (game.data.turn == game.data.AI)
+						return;
+					else if (game.data.AI != null) {					
+					 	game.data.switchTurn();
+						return;
+					}
 				 	game.data.switchTurn();
 					game.HUDInstance.addChild(confirmTurnButton, Infinity);
 					game.data.buttonExists = true;
@@ -80,7 +125,7 @@ game.HUD.Container = me.ObjectContainer.extend({
 				}
 			}
 		);
-		// add HUD background - Jay Oster Sprung Fever example!
+
 		HUDBackground = new game.ColorLayer(
             new me.Vector2d(),
             213,
@@ -89,6 +134,7 @@ game.HUD.Container = me.ObjectContainer.extend({
             "black"
         );
 
+		this.addChild(surrenderButton, 4);
 		this.addChild(captureButton, 4);
 		this.addChild(waitButton, 4);
 		this.addChild(endTurnButton, 4);
@@ -234,10 +280,7 @@ game.HUD.Container = me.ObjectContainer.extend({
 		me.state.resume(false);
     }
 });
-/** 
- * a basic Color Layer from Jay Oster Spring Fever Game
- * https://github.com/blipjoy/sprung_fever/blob/8a761246e885cef5bc490ec8f48d126fa0b2ca7f/public/js/entities/hud.js
- */
+
 game.ColorLayer = me.Renderable.extend({
     "init" : function (pos, w, h, name, color) {
         this.parent(pos, w, h);
