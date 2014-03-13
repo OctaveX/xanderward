@@ -83,7 +83,7 @@ game.MenuScreen = me.ScreenObject.extend({
 
 		me.game.add(new textBox(290, 405-43, new me.Font("Arial", 25, "black"), "Credits", function(){}), Infinity);
 
-		me.game.add(new textBox(453, 405-43, new me.Font("Arial", 25, "black"), "Game Manual", function(){}), Infinity);
+		me.game.add(new textBox(453, 406-43, new me.Font("Arial", 25, "black"), "Game Manual", function(){}), Infinity);
 
 		me.game.add(AIMap1Button, Infinity);
 		me.game.add(AIMap2Button, Infinity);
