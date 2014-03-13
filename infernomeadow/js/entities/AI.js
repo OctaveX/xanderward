@@ -11,42 +11,118 @@ function AI() {
 	
 	this.enemyBuildings = new Array();
 	
+	
+	
+	
+	if (game.data.AI == "green") {
+		this.AIdetails = game.data.green;
+		this.ENUM = {
+			Inf : 64,
+			Roc : 65,
+			Sni : 66,
+			Tan : 67,
+			LAV : 68,
+			Art : 69,
+			Cle : 70
+		};
+	}
+	else {
+		this.AIdetails = game.data.red;
+		this.ENUM = {
+			Inf : 56,
+			Roc : 57,
+			Sni : 58,
+			Tan : 59,
+			LAV : 60,
+			Art : 61,
+			Cle : 62
+		};
+	}
 }
 
-AI.prototype.turn = function(){
+AI.prototype.turn = function(unitCount){
 
 
 	//MOVE and kill as they move.
-	for (var i = 0; i < this.units.length; i++){
-	
-		var unit = this.units[i];
+	if (unitCount < this.units.length){
+		var unit = this.units[unitCount];
 		
 		//check for null unit aka it died
-		if (unit.unit == null){		
-			this.units.splice(i, 1);
-			i--;
-			continue;
+		if (unit.unit == null || unit.unit.player != game.data.AI){		
+			this.units.splice(unitCount, 1);
+			return false;
 		}
 		
-		if (unit.unit.state != 0)
-			break;
-		// if unit moved, take the tile out of the array.
-		if (this.findMove(unit)){
-			this.units.splice(i, 1);
-			i--;
+		//check the unit is in right state as units get appended
+		if (unit.unit.state == 0){			
+			
+			// if unit moved, take the tile out of the array.
+			if (this.findMove(unit)){
+				this.units.splice(unitCount, 1);
+				game.data.AImove--;
+			}
+			game.data.AImove++;
+			return false;
+		}
+	}
+	
+	//build units.
+	for (var i = 0; i < this.buildings.length; i++) {
+		if (this.buildings[i].structure.typeName == "Factory"){
+			
+			//can't build on a unit!
+			if (this.buildings[i].unit != null)
+				continue;
+			
+			//build according to money.
+			switch (this.AIdetails.money){
+				case 1:
+				case 0:	break;
+				case 2:
+				case 3:
+				case 4: 
+				case 5:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.Inf);
+					this.units.push(this.buildings[i]);
+					break;
+				case 6:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.Roc);
+					this.units.push(this.buildings[i]);
+					break;
+				case 7:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.Sni);
+					this.units.push(this.buildings[i]);
+					break;
+				case 8:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.LAV);
+					this.units.push(this.buildings[i]);
+					break;
+				case 9:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.Cle);
+					this.units.push(this.buildings[i]);
+					break;				
+				case 10:
+				case 11:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.Tan);
+					this.units.push(this.buildings[i]);
+					break;
+				case 12:
+				default:
+					game.data.map.buildUnit(this.buildings[i], this.ENUM.Art);
+					this.units.push(this.buildings[i]);
+					break;
+			}
 		}
 	}
 
+	game.data.AImove = 0;
+	return true;
 };
 
-//check distance. Find close spot based on that. 
-// have move distance. 
 
-// TODO add special cases for cleric, artillery, and snipers. 
-
+// find the next place to move
 AI.prototype.findMove = function(unit){
-		
-		
+	
 	game.data.map.previewMove(unit);
 	
 	game.data.lastTile = unit;
@@ -92,19 +168,18 @@ AI.prototype.findMove = function(unit){
 				}
 			}		
 		}
-	}
-	
+	}	
 	
 	
 	//scroll through all possible moves, check if preview attack has something.  
-	if (game.data.map.movePossible.length > 0){
+	if (game.data.map.movePossible.length > 1){
 		for (var j = 0; j < game.data.map.movePossible.length; j++){
 				
 			
 			var tempTile = game.data.map.tile[game.data.map.movePossible[j].x][game.data.map.movePossible[j].y];			
 			
 			// make sure it's a valid move
-			if (!game.data.map.validMove(tempTile, unit))
+			if (!game.data.map.validMove(tempTile, unit) || tempTile.unit != null)
 				continue;				
 				
 			unit.unit.state = 1;	
@@ -148,13 +223,40 @@ AI.prototype.findMove = function(unit){
 			
 		}
 		
-		//there are possible moves, but none have an enemy to attack!
-		while (true){
-			newpos = game.data.map.movePossible.pop();
-			game.data.map.movePossible.unshift(newpos);
-			if (newpos.val > 0)
+		var enemyBase;
+		var newpos = game.data.map.movePossible[0];
+		
+		//find the enemy base.
+		for (var i=0; i < this.enemyBuildings.length; i++){
+			if (this.enemyBuildings[i].structure.typeName == "Base") {
+				enemyBase = this.enemyBuildings[i];
 				break;
-		}		
+			}
+		}
+		
+		if (enemyBase == null)
+			return false;
+		
+		//get a value to keep AI from getting stuck
+		var backup = game.data.map.movePossible.pop();
+			game.data.map.movePossible.unshift(backup);
+		
+		//find optimal move seeking enemy base.
+		for (var i=1; i < game.data.map.movePossible.length; i++) {
+			
+			var tempPos = game.data.map.movePossible[i];
+			
+			//check for better delta
+			if ((Math.abs(enemyBase.x - tempPos.x) + Math.abs(enemyBase.y - tempPos.y)) < (Math.abs(enemyBase.x - newpos.x) + Math.abs(enemyBase.y - newpos.y)))
+				newpos = tempPos; 			
+		
+		}
+		
+		//if stuck? need path to enemy base... 
+			//if current pos is optimal move to a far pos. 
+		if (newpos.val == 0) 
+			newpos = backup;
+		
 		
 		var newTile = game.data.map.tile[newpos.x][newpos.y];
 	
@@ -218,19 +320,3 @@ AI.prototype.captureStructure = function (tile){
 
 	return false;	
 };
-
-/*
-//turn  C:\Users\Matthew\Documents\myschool\my schoolwork\2013-2014\design\boilerplate-master\Git repo\js\entities\AI.js
-//move all units as close to shit as possible. 
-//capture priority, then attack. 
-
-//priority
-// check all friendly units for closest
-// move as close as possible and attack.
-
-//sub priority
-// check all friendly units for buildings
-// move as close as possible and attack.
-
-// check all friendly factories
-// build something.*/

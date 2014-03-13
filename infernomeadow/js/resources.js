@@ -14,9 +14,13 @@ game.resources = [
 	
     {name: "title_screen", type:"image", src: "data/img/gui/shell_corp_ inc_ltd_&_co.png"},
     {name: "credits_screen", type:"image", src: "data/img/gui/credits.png"},
-    {name: "menu_screen", type:"image", src: "data/img/gui/menuBackground.png"},
+    {name: "menu_screen", type:"image", src: "data/img/gui/mainMenuBackground.png"},
+    {name: "redWin", type:"image", src: "data/img/gui/redWin.png"},
+    {name: "greenWin", type:"image", src: "data/img/gui/greenWin.png"},
     
     /* Buttons */
+
+    //HUD buttons
     {name: "button", type:"image", src: "data/img/gui/button.png"},
     {name: "endturn", type:"image", src: "data/img/gui/endturn.png"},
     {name: "wait", type:"image", src: "data/img/gui/wait.png"},
@@ -25,7 +29,7 @@ game.resources = [
     {name: "startTurn", type:"image", src: "data/img/gui/startTurn.png"},
     {name: "mute", type:"image", src: "data/img/gui/mute.png"},
 
-
+    //factory menu
     {name: "infantryButton", type:"image", src: "data/img/gui/infantryButton.png"},
     {name: "rocketButton", type:"image", src: "data/img/gui/rocketButton.png"},
     {name: "sniperButton", type:"image", src: "data/img/gui/sniperButton.png"},
@@ -34,12 +38,12 @@ game.resources = [
     {name: "tankButton", type:"image", src: "data/img/gui/tankButton.png"},
     {name: "artilleryButton", type:"image", src: "data/img/gui/artilleryButton.png"},
     {name: "cancelButton", type:"image", src: "data/img/gui/cancelButton.png"},
-
     {name: "factoryMenu", type:"image", src: "data/img/gui/factoryMenu.png"},
+    //main menu
+    {name: "mapButton", type:"image", src: "data/img/gui/mapButton.png"},
+    {name: "creditsButton", type:"image", src: "data/img/gui/creditsButton.png"},
+    {name: "mainMenu", type:"image", src: "data/img/gui/mainMenu.png"},
 
-
-    {name: "redWin", type:"image", src: "data/img/redWin.png"},
-    {name: "greenWin", type:"image", src: "data/img/greenWin.png"},
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},

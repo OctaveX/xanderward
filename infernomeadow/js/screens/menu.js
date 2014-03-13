@@ -21,69 +21,79 @@ game.MenuScreen = me.ScreenObject.extend({
 		//binds left click to enter
 		me.input.bindMouse(me.input.mouse.LEFT, me.input.KEY.ENTER);
 
-		AIMap1Button = new button(115+106, 100+125, "infantryButton", 200, 50,
+		AIMap1Button = new button(441, 225-53, "mapButton", 90, 50,
 			function(){
 				game.data.mapName = "map1";
 				game.data.AI = "green";
 				me.state.change(me.state.PLAY);
 			}
 		);
-		AIMap2Button = new button(115+106, 160+125, "rocketButton", 200, 50,
+		AIMap2Button = new button(441, 285-53, "mapButton", 90, 50,
 			function(){
 				game.data.mapName = "map2";
 				game.data.AI = "green";
 				me.state.change(me.state.PLAY);
 			}
 		);
-		AIMap3Button = new button(115+106, 220+125, "sniperButton", 200, 50,
+		AIMap3Button = new button(441, 345-53, "mapButton", 90, 50,
 			function(){
 				game.data.mapName = "map3";
 				game.data.AI = "green";
 				me.state.change(me.state.PLAY);
 			}
 		);
-		creditsButton = new button(115+106, 280+125, "button", 410, 50,
+		map1Button = new button(541, 225-53, "mapButton", 90, 50,
+			function(){
+				game.data.mapName = "map1";
+				me.state.change(me.state.PLAY);
+			}
+		);
+		map2Button = new button(541, 285-53, "mapButton", 90, 50,
+			function(){
+				game.data.mapName = "map2";
+				me.state.change(me.state.PLAY);
+			}
+		);
+		map3Button = new button(541, 345-53, "mapButton", 90, 50,
+			function(){
+				game.data.mapName = "map3";
+				me.state.change(me.state.PLAY);
+			}
+		);
+		creditsButton = new button(231, 405-53, "creditsButton", 195, 50,
 			function(){
 				me.state.change(me.state.CREDITS);
 			}
 		);
-		map1Button = new button(325+106, 100+125, "lavButton", 200, 50,
+
+		manualButton = new button(431, 405-53, "creditsButton", 195, 50,
 			function(){
-				game.data.mapName = "map1";
-				me.state.change(me.state.PLAY);
+				var win=window.open("https://docs.google.com/document/d/18mCcskwivr6D4J5GkPvYHQ6UH4zVAVSQKn4-BwBbrME/edit?usp=sharing", '_blank');
+  				win.focus();
 			}
 		);
-		map2Button = new button(325+106, 160+125, "tankButton", 200, 50,
-			function(){
-				game.data.mapName = "map2";
-				me.state.change(me.state.PLAY);
-			}
-		);
-		map3Button = new button(325+106, 220+125, "artilleryButton", 200, 50,
-			function(){
-				game.data.mapName = "map3";
-				me.state.change(me.state.PLAY);
-			}
-		);
-		cancelButton = new button(325+106, 280+125, "cancelButton", 300, 50,
-			function(){
-				
-			}
-		);
-		menuBackground = new button(100+106, 180, "factoryMenu", 450, 300,
-			function(){
-			}
-		);
+
+		me.game.add(new textBox(267, 200-53, new me.Font("Arial", 25, "black"), "Select a map", function(){}), Infinity);
+		me.game.add(new textBox(450, 200-53, new me.Font("Arial", 20, "black"), "1 Player", function(){}), Infinity);
+		me.game.add(new textBox(545, 200-53, new me.Font("Arial", 20, "black"), "2 Players", function(){}), Infinity);
+
+		me.game.add(new textBox(296, 240-53, new me.Font("Arial", 25, "black"), "Classic", function(){}), Infinity);
+		me.game.add(new textBox(300, 300-53, new me.Font("Arial", 25, "black"), "Oasis", function(){}), Infinity);
+		me.game.add(new textBox(275, 360-53, new me.Font("Arial", 25, "black"), "Urban Town", function(){}), Infinity);
+
+		me.game.add(new textBox(290, 405-43, new me.Font("Arial", 25, "black"), "Credits", function(){}), Infinity);
+
+		me.game.add(new textBox(453, 405-43, new me.Font("Arial", 25, "black"), "Game Manual", function(){}), Infinity);
 
 		me.game.add(AIMap1Button, Infinity);
 		me.game.add(AIMap2Button, Infinity);
 		me.game.add(AIMap3Button, Infinity);
 		me.game.add(creditsButton, Infinity);
+		me.game.add(manualButton, Infinity);
 		me.game.add(map1Button, Infinity);
 		me.game.add(map2Button, Infinity);
 		me.game.add(map3Button, Infinity);
-		//me.game.add(cancelButton, Infinity);
-		me.game.add(menuBackground, Infinity);
+
 	},
 	
 	/**

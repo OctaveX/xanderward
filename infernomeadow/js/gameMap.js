@@ -65,7 +65,7 @@ mapObject.prototype.move = function (oldTile, newTile){
 
 	//If not an AI guy do some things.
 	
-	if (game.data.turn != game.data.AI){
+	if (game.data.turn != game.data.AI && game.AI != null){
 	
 		for (var i = 0; i < game.AI.enemyUnits.length; i++){
 			if (oldTile.x == game.AI.enemyUnits[i].x && oldTile.y == game.AI.enemyUnits[i].y){
@@ -268,9 +268,12 @@ mapObject.prototype.highlightTiles = function(tileType, attack, unitType){
 		for (var i = 1; i < this.movePossible.length; i++){	
 			//ensure it is not a friendly (unless you are a cleric)
 			if (this.movePossible[i].val < 0 && 
-				!((unitType == this.ENUM.RCle || unitType == this.ENUM.GCle) && (attack)))
+				!((unitType == this.ENUM.RCle || unitType == this.ENUM.GCle) && (attack))){
+				//remove it from move possible if it isn't possible.
+				this.movePossible.splice(i,1);
+				i--;
 				continue;
-			
+			}
 			//check to see if there is a unit there or attacking. 
 			if ((this.tile[this.movePossible[i].x][this.movePossible[i].y].unitType != null) || (!attack))			
 				layer.setTile(this.movePossible[i].x, this.movePossible[i].y, tileType);
@@ -359,28 +362,42 @@ mapObject.prototype.killUnit = function(toKill){
 	layer.clearTile(toKill.x, toKill.y);
 
 	this.ungrey(toKill);
+	
+	for (var i = 0; i < game.data.moved.length; i++){
+		if (toKill == game.data.moved[i]){
+			game.data.moved.splice(i,1);
+			break;			
+		}
+	}
 };
 
 mapObject.prototype.capture = function(captureTile){
 
-	//must be in attack state
-	if (captureTile.unit.state != 1)
+	//must be in attack state or wait state
+	if (captureTile.unit.state == 2)
 		return false;
 	
 	//must be able to attack buildings
 	if	(captureTile.unit.typeName =="Artillery" || captureTile.unit.typeName == "Tank" || captureTile.unit.typeName == "LAV")
 		return false;
-
-	this.greyOut(captureTile);
 	
+	//must be a building
+	if (captureTile.structure == null)
+		return false;
+		
 	//heal a structure if it is owned.
 	if (captureTile.unit.player == captureTile.structure.player){
-		captureTile.unit.capture(captureTile.structure, -1);		
+		if (capturetile.structure.health < 20){
+		
+			captureTile.unit.capture(captureTile.structure, -1);
+			this.greyOut(captureTile);
+			return true;
+		}	
+		else
+			return false;
 	}
 	else if	(captureTile.unit.capture(captureTile.structure, 1)) {
 		//CAPTURED!
-		captureTile.structure.health = 20;
-		captureTile.structure.player = captureTile.unit.player;
 		
 		var tileMap = me.game.currentLevel;
 		var layer = tileMap.getLayerByName("Structures");
@@ -420,8 +437,16 @@ mapObject.prototype.capture = function(captureTile){
 				game.data.GAMEOVER.winner = "green";
 			}
 		}
+		
+		
+		captureTile.structure.health = 20;
+		captureTile.structure.player = captureTile.unit.player;
 
 	}
+	
+	this.greyOut(captureTile);
+	return true;
+	
 };
 
 //builds a unit on a factory 

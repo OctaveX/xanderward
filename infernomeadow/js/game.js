@@ -52,7 +52,8 @@ var game = {
 		}, 
 		
 		//SWITCH THIS TO A COLOR TO SET IT TO AI
-		AI : ""
+		AI : null,
+		AImove : 0
 	},	
 	
 	// Run on page load.

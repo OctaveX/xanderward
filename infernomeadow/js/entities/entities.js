@@ -89,7 +89,7 @@ Unit.prototype.initInfantry = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 1;
+	this.cost = 2;
 };
 Unit.prototype.initRocket = function(){
 	this.typeName = "Rocket";
@@ -100,7 +100,7 @@ Unit.prototype.initRocket = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 3;
+	this.cost = 5;
 };
 Unit.prototype.initSniper = function(){
 	this.typeName = "Sniper";
@@ -111,7 +111,7 @@ Unit.prototype.initSniper = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 3;
-	this.cost = 4;
+	this.cost = 7;
 };
 Unit.prototype.initTank = function(){
 	this.typeName = "Tank";
@@ -122,7 +122,7 @@ Unit.prototype.initTank = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 5;
+	this.cost = 10;
 };
 Unit.prototype.initLav = function(){
 	this.typeName = "LAV";
@@ -133,7 +133,7 @@ Unit.prototype.initLav = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 4;
+	this.cost = 8;
 };
 Unit.prototype.initArtillery = function(){
 	this.typeName = "Artillery";
@@ -144,7 +144,7 @@ Unit.prototype.initArtillery = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 3;
-	this.cost = 6;
+	this.cost = 12;
 };
 Unit.prototype.initCleric = function(){
 	this.typeName = "Cleric";
@@ -155,7 +155,7 @@ Unit.prototype.initCleric = function(){
 	this.armour = 0;
 	this.state = 0;
 	this.range = 1;
-	this.cost = 5;
+	this.cost = 9;
 };
 
 Unit.prototype.attack = function(enemy){
@@ -187,6 +187,9 @@ Unit.prototype.attack = function(enemy){
 };
 
 Unit.prototype.capture = function(structure, multiplier){
+
+	if (this.state == 0)
+		game.data.moved.push(game.data.lastTile);
 
 	//for friendly structures the multiplier is -1 for healing
 	structure.health -= (this.health * multiplier);

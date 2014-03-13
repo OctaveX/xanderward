@@ -52,8 +52,21 @@ game.PlayScreen = me.ScreenObject.extend({
 		// 	return false;
 		
 		if (game.data.AI == game.data.turn){
-			game.AI.turn();
-			game.data.switchTurn();
+			
+			//check for end of turn
+			if (game.AI.turn(game.data.AImove)){
+				game.data.switchTurn();
+				
+				game.HUDInstance.addChild(confirmTurnButton, Infinity);
+				game.data.buttonExists = true;
+
+				game.data.map.unlightTiles();
+				game.data.lastTile = null;
+
+				me.state.pause(true);
+			}
+				
+			return true;
 		}
 		
 		if (me.input.isKeyPressed('enter')){

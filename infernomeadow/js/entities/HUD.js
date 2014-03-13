@@ -50,6 +50,14 @@ game.HUD.Container = me.ObjectContainer.extend({
 
 		endTurnButton = new button(748, 430, "endturn", 100, 50,
 			function(){
+			
+				if (game.data.turn == game.data.AI)
+					return;
+				else if (game.data.AI != null) {					
+				 	game.data.switchTurn();
+					return;
+				}
+			
 				if(!game.data.buttonExists && !game.data.factoryMenuActive){
 				 	game.data.switchTurn();
 					game.HUDInstance.addChild(confirmTurnButton, Infinity);

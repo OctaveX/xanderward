@@ -18,8 +18,7 @@ game.CreditsScreen = me.ScreenObject.extend({
 		//binds left click to enter
 		me.input.bindMouse(me.input.mouse.LEFT, me.input.KEY.ENTER);
 	   
-		//binds an event listener to mouse move
-		//me.input.registerPointerEvent("mousemove", /*target*/, this.mouseMove.bind(this));
+		me.game.add(new textBox(435, 200, new me.Font("Arial", 35, "black", "center"), "Created by\nXander Ward & Matthew Meinen\nwith melonJS", function(){}), Infinity);
 	},
 	
 	/**
