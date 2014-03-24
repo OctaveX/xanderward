@@ -76,9 +76,6 @@ var game = {
 			});
 		}
 
-		// Initialize the audio.
-		me.audio.init("mp3,ogg");
-
 		// Set a callback to run when loading is complete.
 		me.loader.onload = this.loaded.bind(this);
 
@@ -112,7 +109,7 @@ var game = {
 		me.input.bindKey(me.input.KEY.X,     "jump", true);
 
 		// Start the game.
-		me.state.change(me.state.USER);
+		me.state.change(me.state.MENU);
 	
 	}
 };

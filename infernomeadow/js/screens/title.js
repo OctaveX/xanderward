@@ -18,13 +18,6 @@ game.TitleScreen = me.ScreenObject.extend({
 		//binds left click to enter
 		me.input.bindMouse(me.input.mouse.LEFT, me.input.KEY.ENTER);
 	   
-	   
-		//TUNESKYS
-		// if (me.audio.getCurrentTrack() == null)
-		// 	me.audio.playTrack("Take_A_Chance");
-		
-		//binds an event listener to mouse move
-		//me.input.registerPointerEvent("mousemove", /*target*/, this.mouseMove.bind(this));
 	},
 	
 	/**

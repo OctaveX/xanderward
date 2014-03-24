@@ -31,7 +31,6 @@ game.resources = [
     {name: "capture", type:"image", src: "data/img/gui/capture.png"},
     {name: "attack", type:"image", src: "data/img/gui/attack.png"},
     {name: "startTurn", type:"image", src: "data/img/gui/startTurn.png"},
-    {name: "mute", type:"image", src: "data/img/gui/mute.png"},
 
     //factory menu
     {name: "infantryButton", type:"image", src: "data/img/gui/infantryButton.png"},
@@ -43,10 +42,10 @@ game.resources = [
     {name: "artilleryButton", type:"image", src: "data/img/gui/artilleryButton.png"},
     {name: "cancelButton", type:"image", src: "data/img/gui/cancelButton.png"},
     {name: "factoryMenu", type:"image", src: "data/img/gui/factoryMenu.png"},
+
     //main menu
     {name: "mapButton", type:"image", src: "data/img/gui/mapButton.png"},
     {name: "creditsButton", type:"image", src: "data/img/gui/creditsButton.png"},
-    {name: "mainMenu", type:"image", src: "data/img/gui/mainMenu.png"},
 
 	/* Atlases 
 	 * @example

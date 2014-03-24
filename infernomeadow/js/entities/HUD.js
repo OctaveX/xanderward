@@ -25,8 +25,6 @@ game.HUD.Container = me.ObjectContainer.extend({
 		this.name = "HUD";
 		
 		// add our child score object at the top left corner
-		//0
-		
 		
       	this.addChild(turnText);
       	this.addChild(redMoneyText);

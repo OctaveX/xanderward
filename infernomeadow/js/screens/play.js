@@ -35,12 +35,6 @@ game.PlayScreen = me.ScreenObject.extend({
 		game.data.map = new mapObject();
 		game.data.map.init(sizex, sizey);
 		game.data.lastTile = new container();
-		
-		me.audio.stopTrack();
-		
-		//MUSIC!
-		// me.audio.playTrack("Broken_Reality");
-		
 	},
 	
 	/**
